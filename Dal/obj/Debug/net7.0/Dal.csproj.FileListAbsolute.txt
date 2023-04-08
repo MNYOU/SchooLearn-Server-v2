@@ -1,0 +1,14 @@
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\bin\Debug\net7.0\Dal.deps.json
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\bin\Debug\net7.0\Dal.dll
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\bin\Debug\net7.0\Dal.pdb
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.csproj.AssemblyReference.cache
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.AssemblyInfoInputs.cache
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.AssemblyInfo.cs
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.csproj.CoreCompileInputs.cache
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.dll
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\refint\Dal.dll
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.pdb
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\ref\Dal.dll
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\bin\Debug\net7.0\Dal.runtimeconfig.json
+C:\Users\Арман\Documents\Programs\C#\SchooLearn\Dal\obj\Debug\net7.0\Dal.genruntimeconfig.cache

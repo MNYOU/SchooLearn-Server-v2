@@ -21,5 +21,7 @@ public class Group
 
     public Subject Subject { get; set; }
     
-    public ICollection<Student> Students { get; set; }
+    public ICollection<GroupStudent> GroupsStudent { get; set; }
+    
+    public ICollection<Task> Tasks { get; set; }
 }

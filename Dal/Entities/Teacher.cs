@@ -10,7 +10,7 @@ public class Teacher
     
     public Institution Institution { get; set; } // один ко многим
     
-    public List<Subject> Subjects { get; set; }
+    public ICollection<Subject> Subjects { get; set; }
     
-    public List<Group> Groups { get; set; }
+    public ICollection<Group> Groups { get; set; }
 }

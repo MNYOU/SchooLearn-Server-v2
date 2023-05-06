@@ -7,17 +7,18 @@ namespace Logic.Interfaces;
 public interface IStudentManager
 {
     Task<bool> Register(User user);
-    
-    bool JoinInGroup(long key);
-    
-    // is't good?
-    IEnumerable<TaskApiModel> GetMyTasks();
-    // как реализовать задания с развернутыми ответами
-    IEnumerable<TaskCustomApiModel> GetTaskWithAnswer();
 
-    // TODO как быть с авторизационной сессией
+    Student? Get(long id);
 
-    // вопрос на подумать
-    // вступление в группу, выход из нее должно быть здесь?
-    // а общие манипуляции должные быть там?
+    Task<Student?> GetAsync(long id);
+
+    Student? GetWithDetails(long id);
+    
+    Task<Student?> GetWithDetailsAsync(long id);
+
+    IEnumerable<GroupApiModel> GetMyGroups(long studentId);
+
+    Task<bool> CreateApplicationToGroup(long studentId, long groupId, long invitationCode);
+
+    Task<bool> LeaveGroupAsync(long studentId, long groupId);
 }

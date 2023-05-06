@@ -1,4 +1,5 @@
-﻿using Dal.Enums;
+﻿using System.Security.Claims;
+using Dal.Enums;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +13,8 @@ public class AdministratorController : ControllerBase
 {
     private readonly IAdministratorManager _manager;
 
+    private long Id => long.Parse(User.FindFirst("Id")?.Value ?? "0");
+
     public AdministratorController(IAdministratorManager manager)
     {
         _manager = manager;
@@ -20,15 +23,15 @@ public class AdministratorController : ControllerBase
     [HttpGet("invitation-code")]
     public IActionResult GetInvitationCode()
     {
-        var code = _manager.GetInvitationCode();
-        return Ok(code);
+        var code = _manager.GetInvitationCode(Id);
+        return code != null ? Ok(code) : StatusCode(500);
     }
 
 
     [HttpPut("invitation-code/new")]
     public IActionResult GenerateNewInvitationCode()
     {
-        var result = _manager.GenerateNewInvitationCode();
+        var result = _manager.GenerateNewInvitationCode(Id);
         return result ? Ok() : StatusCode(500);
     }
 }

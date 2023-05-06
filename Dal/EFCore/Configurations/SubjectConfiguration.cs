@@ -9,6 +9,9 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
     public void Configure(EntityTypeBuilder<Subject> builder)
     {
         builder
+            .ToTable("subjects");
+        
+        builder
             .Property(s => s.Id)
             .HasColumnName("id");
 
@@ -19,5 +22,10 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
         builder
             .Property(s => s.Description)
             .HasColumnName("description");
+
+        builder
+            .HasOne(s => s.Teacher)
+            .WithMany(t => t.Subjects)
+            .HasForeignKey(s => s.TeacherId);
     }
 }

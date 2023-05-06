@@ -16,8 +16,8 @@ public class DifficultyConfiguration: IEntityTypeConfiguration<Difficulty>
         builder.Property(d => d.Name)
             .HasColumnName("name");
 
-        builder.Property(d => d.Worth)
+        builder.Property(d => d.Scores)
             .IsRequired()
-            .HasColumnName("worth");
+            .HasColumnName("scores");
     }
 }

@@ -29,6 +29,8 @@ public class Institution
         }
     }
 
+    public long AdminId { get; set; }
+
     public Admin Admin { get; set; }
 
     // public long InvitationCodeForStudents { get; set; }

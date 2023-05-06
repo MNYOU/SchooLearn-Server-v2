@@ -39,20 +39,13 @@ public class AdministratorManager : IAdministratorManager
         return true;
     }
 
-    public long GetInvitationCode()
+    public long? GetInvitationCode(long adminId)
     {
         throw new NotImplementedException();
     }
 
-    public bool GenerateNewInvitationCode()
+    public bool GenerateNewInvitationCode(long adminId)
     {
-        throw new NotImplementedException();
-    }
-
-    public long GetNewCode()
-    {
-        // переименовать на код для учителей
-        // здесь должен проксироваться запрос к institutionManager
         throw new NotImplementedException();
     }
 }

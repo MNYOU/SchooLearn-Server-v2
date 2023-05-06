@@ -1,4 +1,6 @@
-﻿using Dal.Entities;
+﻿using System.Net.Mime;
+using AutoMapper;
+using Dal.Entities;
 using Dal.Repositories;
 using Logic.ApiModels;
 using Logic.Interfaces;
@@ -8,47 +10,28 @@ namespace Logic.Implementations;
 
 public class InstitutionManager : IInstitutionManager
 {
+    private readonly IMapper _mapper;
     private readonly IInstitutionRepository _repository;
+    private readonly IProjectManager _projectManager;
 
-    public InstitutionManager(IInstitutionRepository repository)
+    public InstitutionManager(IMapper mapper,IInstitutionRepository repository, IProjectManager projectManager)
     {
+        _mapper = mapper;
         _repository = repository;
+        _projectManager = projectManager;
     }
 
     public async Task<Application?> CreateApplication(InstitutionApiModel model)
     {
-        var institution = new Institution();
-        if (_repository.Institutions.Any(i => IsPartiallyEqual(institution, i)))
+        var institution = _mapper.Map<Institution>(model);
+        if (_repository.Institutions.Any(i => IsPartiallyEqual(i, institution)))
             return null;
-
-        var application = new Application() { Institution = institution, IsReviewed = false };
         await _repository.Institutions.AddAsync(institution);
-        await _repository.Applications.AddAsync(application);
+        var application = await _projectManager.CreateApplication(institution);
         await _repository.SaveChangesAsync();
         return application;
     }
 
-    public IEnumerable<Application> GetNotReviewedApplications()
-    {
-        return _repository.Applications
-            .Where(a => !a.IsReviewed)
-            .AsEnumerable();
-    }
-
-    public bool ConsiderApplication(long applicationId, bool isConfirmed)
-    {
-        var application = _repository.Applications
-            .Include(a => a.Institution)
-            .FirstOrDefault(a => a.Id == applicationId);
-        if (application == null || application.IsReviewed)
-            return false;
-        
-        // где-то должна быть генерация кодов
-        application.Institution.IsConfirmed = true;
-        application.IsReviewed = isConfirmed;
-        application.ApplicationResult = isConfirmed;
-        return true;
-    }
 
     public IEnumerable<InstitutionApiModel> GetAllConfirmed()
     {

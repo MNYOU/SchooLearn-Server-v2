@@ -5,9 +5,7 @@ namespace Dal.Repositories;
 
 public interface IInstitutionRepository
 {
-    
     DbSet<Institution> Institutions { get; set; }
-    DbSet<Application> Applications { get; set; }
 
     int SaveChanges();
 

@@ -6,6 +6,8 @@ namespace Logic.ApiModels;
 public record RegistrationApiModel 
 {
     [Required(ErrorMessage = "Поле \"Никнейм\" обязательно")]
+    [MinLength(5)]
+    [MaxLength(15)]
     public string Nickname { get; init; }
     
     [Required]

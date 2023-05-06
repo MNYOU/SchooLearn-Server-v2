@@ -44,5 +44,9 @@ public class TaskConfiguration : IEntityTypeConfiguration<Task>
         builder
             .Property(t => t.ExecutionPeriod)
             .HasColumnName("execution_period");
+
+        builder
+            .HasMany(t => t.Groups)
+            .WithMany(g => g.Tasks);
     }
 }

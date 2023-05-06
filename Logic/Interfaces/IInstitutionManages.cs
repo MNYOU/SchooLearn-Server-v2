@@ -7,10 +7,6 @@ public interface IInstitutionManager
 {
     Task<Application?> CreateApplication(InstitutionApiModel model);
 
-    IEnumerable<Application> GetNotReviewedApplications();
-
-    bool ConsiderApplication(long applicationId, bool isConfirmed);
-
     IEnumerable<InstitutionApiModel> GetAllConfirmed();
 
     Institution? GetByPrimaryInvitationCode(long code);

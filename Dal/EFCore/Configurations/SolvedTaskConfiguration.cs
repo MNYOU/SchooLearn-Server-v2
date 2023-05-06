@@ -1,6 +1,7 @@
 ﻿using Dal.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Query.Expressions.Internal;
 
 namespace Dal.EFCore.Configurations;
 
@@ -8,6 +9,8 @@ public class SolvedTaskConfiguration: IEntityTypeConfiguration<SolvedTask>
 {
     public void Configure(EntityTypeBuilder<SolvedTask> builder)
     {
+        builder.ToTable("solved_tasks");
+        
         builder
             .HasKey(e => new { e.StudentId, e.TaskId });
 

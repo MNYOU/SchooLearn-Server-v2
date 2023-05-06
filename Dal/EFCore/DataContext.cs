@@ -10,22 +10,23 @@ using Task = Dal.Entities.Task;
 
 namespace Dal.EFCore;
 
-public class DataContext : DbContext, IInstitutionRepository, IUserRepository, IAdministratorRepository, ITaskRepository
-// public class DataContext: DbContextб
+public class DataContext : DbContext, IInstitutionRepository, IUserRepository, IAdministratorRepository,
+    IApplicationRepository, ITeacherRepository, IStudentRepository, ITaskRepository, ISubjectRepository,
+    IDifficultyRepository, IGroupRepository
 {
     public DbSet<Institution> Institutions { get; set; }
     public DbSet<Application> Applications { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Admin> Admins { get; set; }
     public DbSet<Teacher> Teachers { get; set; }
-    public DbSet<Subject> Subjects { get; set; }
     public DbSet<Group> Groups { get; set; }
-    public DbSet<Student> Students { get; set; } //
-    public DbSet<SolvedTask> SolvedTasks { get; set; } //
-
+    public DbSet<GroupStudent> GroupStudents { get; set; }
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Subject> Subjects { get; set; }
     public DbSet<Task> Tasks { get; set; }
+    public DbSet<SolvedTask> SolvedTasks { get; set; }
 
-    // // public DbSet<TaskWithDetailedAnswer> TaskWithDetailedAnswers { get; set; }
+    public DbSet<FileData> FIles { get; set; }
     public DbSet<Difficulty> Difficulties { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -8,7 +8,118 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4f5f8bc2-d3ae-4e95-a34e-d3e2eef762b2" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/API/Controllers/ProjectManagerController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Controllers/StudentController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/API/Controllers/TeacherController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/FileDataConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/GroupStudentConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/SolvedExtendedTaskConfiguration.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Entities/FileData.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Entities/GroupStudent.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Entities/SolvedExtendedTask.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Repositories/IApplicationRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Repositories/IDifficultyRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Repositories/IGroupRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Dal/Repositories/ISubjectRepository.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/FileAnswer.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/SolvedTaskApiModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/StudentApiModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/SubjectApiModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskPreviewApiModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskResponseModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskViewModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskWithAnswerRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskWithFileAnswerRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/Helpers/FileHelper.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/Implementations/ProjectManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/Interfaces/IProjectManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/Models/GlobalRatingModel.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Logic/Models/TaskWithFileAnswer.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/AccountController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/AdministratorController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/AdministratorController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/InstitutionController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/InstitutionController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/RatingController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/RatingController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Controllers/TaskController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/TaskController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/ref/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/ref/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/refint/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/refint/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Dal.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Dal.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/AdministratorConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/AdministratorConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/ApplicationConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/ApplicationConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/DifficultyConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/DifficultyConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/GroupConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/GroupConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/InstitutionConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/InstitutionConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/SolvedTaskConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/SolvedTaskConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/StudentConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/StudentConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/SubjectConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/SubjectConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/TaskConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/TaskConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/TeacherConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/TeacherConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Configurations/UserConfiguration.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/Configurations/UserConfiguration.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/DataContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Migrations/20230408190421_Initial.Designer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Migrations/20230408190421_Initial.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/Migrations/DataContextModelSnapshot.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Difficulty.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Difficulty.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Group.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Group.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Institution.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Institution.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/SolvedTask.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/SolvedTask.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/SolvedTaskWithDetailedAnswer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Student.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Student.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Subject.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Subject.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Task.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Task.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/TaskWithDetailedAnswer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Entities/Teacher.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Entities/Teacher.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Enums/Role.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Enums/Role.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Repositories/IInstitutionRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Repositories/IInstitutionRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/Repositories/ITaskRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/Repositories/ITaskRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/ref/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/ref/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/refint/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/refint/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/rider.project.restore.info" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/GroupApiModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/ApiModels/GroupApiModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/RegistrationApiModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/ApiModels/RegistrationApiModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/TaskApiModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/ApiModels/TaskApiModel.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/TaskCustomApiModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/AutoMapper/AutoMapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/AutoMapper/AutoMapperProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/AccountManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/AccountManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/AdministratorManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/AdministratorManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/InsitutionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/InsitutionManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IAdministratorManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IAdministratorManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IInstitutionManages.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IInstitutionManages.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IStudentManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IStudentManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/ITaskManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/ITaskManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/ITeacherManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/ITeacherManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Logic.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Logic.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/rider.project.restore.info" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/rider.project.restore.info" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,22 +149,21 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/3084d11350b2488ca852a8736f33547cb1c880/69/22f819ff/ICollection`1.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ae838bd3dd2843079478ad1c52e8e0fe118b0/c9/11687aef/IHeaderDictionary.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/365e7bc9bffff1bafa87f3989c799d3c7a4826916528d1c169b5d6835d78978/EntityTypeBuilder`.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/3b85765610c77afea116eb235b0824d2d49e530f47c4cfb6f7b665737a52a2/DbContext.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/4174966c3e7903fa6664fd9654332a08540e6893be050394afd8664936ccba9/RequiredAttribute.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/449b441523c469ed34ff5a5e14f0bafcd8f097aa463655303dc19048fa44ac3/EntityFrameworkServiceCollectionExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/485da50d43321b81edc28153271bdedb84943a243743e2deaa67a981587968/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6d894e53c1d0e27ee0e666475a55d3c2db944f4221f0b6de4ebda38ff1fa/IActionResult.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/81a3bcf4bb6aa5e62a9839f9cfeeba6126496f4fa07d1e57b27a5176e42525/ControllerBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/85448f861b1cb95910693f28a5ce3363967c79953b460b176d97298ae5ed0/Nullable.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d3b35aba78af8938342254c9ab4da7b7362a691ccc71b3decaabd322fea44/Int32.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/dbe4d3e7843db8428f2b9fa39c415d59ae3cd1dd217a467352c540f09bcb/ServiceCollectionDescriptorExtensions.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/ec11765cbb8c53eff7ee868d6884fa5d48e1b543926061744e7947896e88422/CancellationToken.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Dal/EFCore/Configurations/FootballerConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Logic/AutoMapper/AutoMappingProfile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/API/Program.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/Dal/EFCore/DataContext.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/Dal/Entities/Application.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/Dal/Entities/Application.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/Dal/Entities/Institution.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/Dal/Entities/Institution.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../SchoolServer/SchoolServer/Controllers/TokenController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../SchoolServer/SchoolServer/Program.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
@@ -80,7 +190,7 @@
     &quot;TODO_SCOPE&quot;: &quot;All Places&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;project.propVCSSupport.DirectoryMappings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;ReSpellerSettingsId&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -185,6 +295,27 @@
       <workItem from="1680891100423" duration="15693000" />
       <workItem from="1680971380153" duration="4610000" />
       <workItem from="1680981950162" duration="637000" />
+      <workItem from="1681025948909" duration="392000" />
+      <workItem from="1681027023679" duration="728000" />
+      <workItem from="1681027947373" duration="62000" />
+      <workItem from="1681028028197" duration="72000" />
+      <workItem from="1681028113715" duration="36000" />
+      <workItem from="1681033295844" duration="18000" />
+      <workItem from="1681237688734" duration="4855000" />
+      <workItem from="1681243454212" duration="5778000" />
+      <workItem from="1681292712593" duration="9802000" />
+      <workItem from="1681321609971" duration="8947000" />
+      <workItem from="1681402524928" duration="696000" />
+      <workItem from="1681403242525" duration="12992000" />
+      <workItem from="1681567239799" duration="2014000" />
+      <workItem from="1682162498052" duration="12880000" />
+      <workItem from="1682185438325" duration="135000" />
+      <workItem from="1682185598449" duration="4015000" />
+      <workItem from="1682505314929" duration="3106000" />
+      <workItem from="1683017945038" duration="594000" />
+      <workItem from="1683109611727" duration="4435000" />
+      <workItem from="1683233314074" duration="2981000" />
+      <workItem from="1683299317991" duration="5066000" />
     </task>
     <task id="LOCAL-00001" summary="start commit">
       <created>1679302567998</created>
@@ -214,7 +345,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680985516589</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Initial">
+      <created>1680985768413</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1680985768413</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,26 +412,8 @@
     <MESSAGE value="add new class" />
     <MESSAGE value="create database" />
     <MESSAGE value="small edits" />
-    <option name="LAST_COMMIT_MESSAGE" value="small edits" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/API/Controllers/AccountController.cs</url>
-          <line>20</line>
-          <properties documentPath="C:\Users\Арман\Documents\Programs\C#\SchooLearn\API\Controllers\AccountController.cs" initialLine="20" containingFunctionPresentation="method 'Register'">
-            <startOffsets>
-              <option value="463" />
-            </startOffsets>
-            <endOffsets>
-              <option value="507" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="Initial" />
+    <option name="LAST_COMMIT_MESSAGE" value="Initial" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

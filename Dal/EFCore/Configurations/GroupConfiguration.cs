@@ -9,6 +9,9 @@ public class GroupConfiguration: IEntityTypeConfiguration<Group>
     public void Configure(EntityTypeBuilder<Group> builder)
     {
         builder
+            .ToTable("group");
+        
+        builder
             .Property(g => g.Id)
             .HasColumnName("id");
 

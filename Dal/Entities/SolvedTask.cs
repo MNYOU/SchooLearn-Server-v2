@@ -2,7 +2,6 @@
 
 namespace Dal.Entities;
 
-[Keyless]
 public class SolvedTask
 {
     public long StudentId { get; set; }
@@ -13,7 +12,13 @@ public class SolvedTask
 
     public Task Task { get; set; }
 
-    public string Answer { get; set; }
+    public string? Answer { get; set; }
+
+    public FileData FileAnswer { get; set; }
+    
+    public bool IsChecked { get; set; }
+
+    public float Scores { get; set; }
 
     public DateTime SolveTime { get; set; }
 }

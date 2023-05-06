@@ -16,7 +16,7 @@ public class AccountController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegistrationApiModel model)
+    public async Task<IActionResult> Register([FromBody] RegistrationApiModel model, IStudentManager studentManager)
     {
         var result = await _manager.Register(model);
         return result ? Ok() : StatusCode(500);

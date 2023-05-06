@@ -9,6 +9,9 @@ public class AdministratorConfiguration : IEntityTypeConfiguration<Admin>
     public void Configure(EntityTypeBuilder<Admin> builder)
     {
         builder
+            .ToTable("admins");
+            
+        builder
             .HasKey(a => a.UserId);
 
         builder
@@ -17,6 +20,7 @@ public class AdministratorConfiguration : IEntityTypeConfiguration<Admin>
 
         builder
             .HasOne(a => a.Institution)
-            .WithOne(i => i.Admin);
+            .WithOne(i => i.Admin)
+            .HasForeignKey<Institution>(i => i.AdminId);
     }
 }

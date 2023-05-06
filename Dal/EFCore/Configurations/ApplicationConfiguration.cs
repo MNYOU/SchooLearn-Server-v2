@@ -9,6 +9,9 @@ public class ApplicationConfiguration : IEntityTypeConfiguration<Application>
     public void Configure(EntityTypeBuilder<Application> builder)
     {
         builder
+            .ToTable("applications");
+        
+        builder
             .Property(a => a.Id)
             .HasColumnName("id");
 

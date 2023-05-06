@@ -18,9 +18,17 @@ public class Task
     
     public string Answer { get; set; }
 
-    public DateTime CreationDateTime { get; set; }
+    // public bool AnswerAsFile { get; set; } = false;
+    
+    public bool IsExtended { get; set; }
+    
+    public DateTime CreationDateTime { get; set; } = DateTime.Now;
 
     public DateTime ExecutionPeriod { get; set; }
     
-    public ICollection<SolvedTask> SolvedTasks { get; set; } // чзх
+    public ICollection<SolvedTask> SolvedTasks { get; set; }
+    
+    // public ICollection<SolvedExtendedTask> SolvedExtendedTasks { get; set; }
+
+    public ICollection<Group> Groups { get; set; }
 }

@@ -14,11 +14,13 @@ public class AutoMapperProfile: Profile
         CreateMap<TaskApiModel, Task>();
         CreateMap<GroupApiModel, Group>();
         CreateMap<User, AuthorizedApiModel>();
-        CreateMap<RegistrationApiModel, RegistrationModel>();
+        // CreateMap<RegistrationApiModel, RegistrationModel>();
+        CreateMap<RegistrationApiModel, User>();
+            
         CreateMap<LoginApiModel, LoginModel>();
         CreateMap<TaskApiModel, Task>();
         // наверное нужно разделить task модели на респонсе и реквест
-        CreateMap<TaskCustomApiModel, TaskWithDetailedAnswer>();
+        // CreateMap<TaskCustomApiModel, TaskWithDetailedAnswer>();
         CreateMap<TaskApiModel, Task>();
     }
 }

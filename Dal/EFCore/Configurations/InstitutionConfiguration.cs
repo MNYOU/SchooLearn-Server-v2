@@ -9,6 +9,9 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
     public void Configure(EntityTypeBuilder<Institution> builder)
     {
         builder
+            .ToTable("institutions");
+        
+        builder
             .Property(i => i.Id)
             .HasColumnName("id");
 

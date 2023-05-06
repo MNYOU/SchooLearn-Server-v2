@@ -54,9 +54,25 @@ services.AddDbContext<DataContext>(); // хотя ms используют раз
 //     .AddEntityFrameworkStores<DataContext>();
 services.AddAutoMapper(typeof(AutoMapperProfile));
 
-// services.AddDbContext<DataContext>();
+services.TryAddScoped<IUserRepository, DataContext>();
+services.TryAddScoped<IAdministratorRepository, DataContext>();
+services.TryAddScoped<IInstitutionRepository, DataContext>();
+services.TryAddScoped<IApplicationRepository, DataContext>();
+services.TryAddScoped<ITeacherRepository, DataContext>();
+services.TryAddScoped<IStudentRepository, DataContext>();
+services.TryAddScoped<IGroupRepository, DataContext>();
 services.TryAddScoped<ITaskRepository, DataContext>();
-// services.TryAddScoped<ITaskManager, TaskManager>();
+services.TryAddScoped<ISubjectRepository, DataContext>();
+services.TryAddScoped<IDifficultyRepository, DataContext>();
+
+services.TryAddScoped<IAccountManager, AccountManager>();
+services.TryAddScoped<IInstitutionManager, InstitutionManager>();
+services.TryAddScoped<IProjectManager, ProjectManager>();
+services.TryAddScoped<IAdministratorManager, AdministratorManager>();
+services.TryAddScoped<IStudentManager, StudentManager>();
+services.TryAddScoped<ITeacherManager, TeacherManager>();
+services.TryAddScoped<IStudentManager, IStudentManager>();
+services.TryAddScoped<ITaskManager, TaskManager>();
 
 var app = builder.Build();
 

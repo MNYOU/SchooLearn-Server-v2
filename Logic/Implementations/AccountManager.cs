@@ -1,6 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Dal.Entities;
 using Dal.Enums;
 using Dal.Repositories;
@@ -15,20 +16,21 @@ namespace Logic.Implementations;
 public class AccountManager : IAccountManager
 {
     private readonly IConfiguration _config;
-
+    private readonly IMapper _mapper;
     private readonly IUserRepository _repository;
     private readonly IAdministratorManager _administratorManager;
     private readonly ITeacherManager _teacherManager;
     private readonly IStudentManager _studentManager;
 
     public AccountManager(IConfiguration config, IUserRepository repository, IAdministratorManager administratorManager,
-        ITeacherManager teacherManager, IStudentManager studentManager)
+        ITeacherManager teacherManager, IStudentManager studentManager, IMapper mapper)
     {
         _config = config;
         _repository = repository;
         _administratorManager = administratorManager;
         _teacherManager = teacherManager;
         _studentManager = studentManager;
+        _mapper = mapper;
     }
 
     public async Task<bool> Register(RegistrationApiModel model)
@@ -52,8 +54,7 @@ public class AccountManager : IAccountManager
     {
         if (_repository.Users.Any(u => u.Email == model.Email || u.Login == model.Login))
             return null;
-        // mapping
-        var user = new User();
+        var user = _mapper.Map<User>(model);
         var hasher = new PasswordHasher<User>();
         user.Password = hasher.HashPassword(user, user.Password);
         await _repository.Users.AddAsync(user);
@@ -68,7 +69,7 @@ public class AccountManager : IAccountManager
             return null;
         var claims = new List<Claim>()
         {
-            new Claim("Id", user.Email),
+            new Claim("TaskId", user.Email),
             new Claim(ClaimTypes.Name, user.Nickname),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim(ClaimTypes.Role, nameof(user.Role)),

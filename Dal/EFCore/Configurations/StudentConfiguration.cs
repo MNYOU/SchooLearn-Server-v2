@@ -10,6 +10,9 @@ public class StudentConfiguration: IEntityTypeConfiguration<Student>
     public void Configure(EntityTypeBuilder<Student> builder)
     {
         builder
+            .ToTable("students");
+        
+        builder
             .HasKey(s => s.UserId);
 
         builder

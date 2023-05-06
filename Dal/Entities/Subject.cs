@@ -14,7 +14,9 @@ public class Subject
 
     public string? Description { get; set; }
 
-    public ICollection<Teacher> Teachers { get; set; }
+    public long TeacherId { get; set; }
+
+    public Teacher Teacher { get; set; }
 
     public ICollection<Group> Groups { get; set; }
 

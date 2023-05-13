@@ -15,25 +15,13 @@ public class Institution
     
     public bool IsConfirmed { get; set; }
     
-    public long PrimaryInvitationCode { get; set; } // при генерации нужно учитывать, чтобы оно было уникально
-
-    private long _invitationCodeForTeachers;
+    public long? PrimaryInvitationCode { get; set; }
     
-    public long? InvitationCodeForTeachers
-    {
-        get => IsConfirmed ? _invitationCodeForTeachers : null;
-        set
-        {
-            if (value is {} code)
-                _invitationCodeForTeachers = code;
-        }
-    }
+    public long? InvitationCodeForTeachers { get; set; }
+    
+    public long? AdminId { get; set; }
 
-    public long AdminId { get; set; }
-
-    public Admin Admin { get; set; }
-
-    // public long InvitationCodeForStudents { get; set; }
+    public Admin? Admin { get; set; }
 
     public ICollection<Teacher> Teachers { get; set; }
 

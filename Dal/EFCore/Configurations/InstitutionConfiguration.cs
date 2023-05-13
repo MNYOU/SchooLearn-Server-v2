@@ -31,5 +31,9 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
 
         builder.Property(i => i.InvitationCodeForTeachers)
             .HasColumnName("invitation_code_for_teachers");
+
+        builder
+            .Property(i => i.PrimaryInvitationCode)
+            .HasColumnName("primary_invitation_code");
     }
 }

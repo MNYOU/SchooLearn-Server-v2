@@ -1,45 +1,45 @@
-﻿using System.Data.SqlTypes;
-using AutoMapper;
+﻿using AutoMapper;
 using Dal.Entities;
 using Dal.Enums;
 using Dal.Repositories;
 using Logic.ApiModels;
+using Logic.Helpers;
 using Logic.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Logic.Implementations;
 
 public class TeacherManager : ITeacherManager
 {
     private readonly IMapper _mapper;
-    private readonly IUserRepository _userRepository;
     private readonly ITeacherRepository _repository;
-    private readonly IInstitutionManager _institutionManager;
     private readonly ISubjectRepository _subjectRepository;
     private readonly IGroupRepository _groupRepository;
+    private readonly IAccountManager _accountManager;
+    private readonly IInstitutionManager _institutionManager;
 
-    public TeacherManager(IMapper mapper, IUserRepository userRepository, ITeacherRepository repository,
-        IInstitutionManager institutionManager, ISubjectRepository subjectRepository, IGroupRepository groupRepository)
+    public TeacherManager(IMapper mapper, ITeacherRepository repository, IInstitutionManager institutionManager,
+        ISubjectRepository subjectRepository, IGroupRepository groupRepository, IAccountManager accountManager)
     {
         _mapper = mapper;
-        _userRepository = userRepository;
         _repository = repository;
         _institutionManager = institutionManager;
         _subjectRepository = subjectRepository;
         _groupRepository = groupRepository;
+        _accountManager = accountManager;
     }
 
-    public async Task<bool> Register(User user, long invitationCode)
+    public async Task<bool> Register(long userId, long invitationCode)
     {
-        if (user.Role != Role.Teacher || !_userRepository.Users.Contains(user) ||
-            _repository.Teachers.Any(t => t.UserId == user.Id))
+        var user = await _accountManager.GetAsync(userId);
+        if (user is null || user.Role != Role.Teacher || _repository.Teachers.Any(t => t.UserId == user.Id))
             return false;
 
         var institution = _institutionManager.GetByInvitationCode(invitationCode);
         if (institution is null) return false;
 
-        var teacher = new Teacher() { User = user, Institution = institution };
+        user.Institution = institution;
+        var teacher = new Teacher { User = user, Institution = institution };
         await _repository.Teachers.AddAsync(teacher);
         await _repository.SaveChangesAsync();
         return true;
@@ -100,7 +100,25 @@ public class TeacherManager : ITeacherManager
         _repository.Teachers.Update(teacher);
         return true;
     }
-    
+
+
+    public async Task<bool> DisbandGroup(long teacherId, long groupId)
+    {
+        var teacher = await _repository.Teachers
+            .Include(t => t.Groups)
+            .FirstOrDefaultAsync(t => t.UserId == teacherId);
+        var group = teacher?.Groups
+            .FirstOrDefault(g => g.Id == groupId);
+        if (teacher != null && group != null)
+        {
+            teacher.Groups.Remove(group);
+            await _repository.SaveChangesAsync();
+            return true;
+        }
+
+        return false;
+    }
+
     private bool TeacherIsCreatorOfGroup(long teacherId, long groupId)
     {
         return _groupRepository.Groups
@@ -139,12 +157,28 @@ public class TeacherManager : ITeacherManager
     {
         if (!TeacherIsCreatorOfGroup(teacherId, groupId)) return false;
         var groupStudents = _groupRepository.GroupStudents
+            .Include(gs => gs.Group)
+            .ThenInclude(gs => gs.Teacher)
+            .ThenInclude(t => t.Institution)
+            .Include(gs => gs.Student)
+            .ThenInclude(s => s.User)
             .FirstOrDefault(gs => gs.GroupId == groupId && gs.StudentId == studentId);
         if (groupStudents is null) return false;
         if (isApproved)
+        {
+            var student = groupStudents.Student;
+            var institution = groupStudents.Group.Teacher.Institution;
             groupStudents.IsApproved = isApproved;
+            if (student.InstitutionId is null)
+            {
+                student.Institution = institution;
+                student.IsConfirmed = true;
+                student.User.Institution = institution;
+            }
+        }
         else
             _groupRepository.GroupStudents.Remove(groupStudents);
+
         _groupRepository.SaveChanges();
         return true;
     }
@@ -158,7 +192,18 @@ public class TeacherManager : ITeacherManager
 
     public bool GenerateNewInvitationCode(long teacherId, long groupId)
     {
-        throw new NotImplementedException();
+        var teacher = _repository.Teachers
+            .Include(t => t.Groups)
+            .FirstOrDefault(t => t.UserId == teacherId);
+        var group = teacher?.Groups
+            .FirstOrDefault(g => g.Id == groupId);
+        if (group is null) return false;
+        var codes = _groupRepository.Groups
+            .Select(g => g.InvitationCode);
+        var newCode = Generator.GenerateInvitationCode(codes);
+        group.InvitationCode = newCode;
+        _repository.SaveChanges();
+        return true;
     }
 
 

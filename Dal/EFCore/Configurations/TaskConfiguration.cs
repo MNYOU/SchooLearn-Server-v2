@@ -42,7 +42,7 @@ public class TaskConfiguration : IEntityTypeConfiguration<Task>
             .HasColumnName("creation_datetime");
 
         builder
-            .Property(t => t.ExecutionPeriod)
+            .Property(t => t.Deadline)
             .HasColumnName("execution_period");
 
         builder

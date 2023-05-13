@@ -8,6 +8,7 @@ using Dal.Repositories;
 using Logic.ApiModels;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -33,17 +34,42 @@ public class AccountManager : IAccountManager
         _mapper = mapper;
     }
 
+    public User? Get(long id)
+    {
+        return _repository.Users
+            .FirstOrDefault(u => u.Id == id);
+    }
+
+    public async Task<User?> GetAsync(long id)
+    {
+        return await _repository.Users
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
+    public User? GetWithDetails(long id)
+    {
+        return _repository.Users
+            .Include(u => u.Institution)
+            .FirstOrDefault(u => u.Id == id);
+    }
+
+    public async Task<User?> GetWithDetailsAsync(long id)
+    {
+        return await _repository.Users
+            .Include(u => u.Institution)
+            .FirstOrDefaultAsync(u => u.Id == id);
+    }
+
     public async Task<bool> Register(RegistrationApiModel model)
     {
-        // нужно ли создавать модель registrationModel?
         var user = await RegisterBaseUser(model);
         if (user is null) return false;
-        var institutionCode = model.InstitutionCode ?? 0; // нужно переименовать в код приглашения
+        var institutionCode = model.InvitationCode ?? 0;
         var result = model.Role switch
         {
-        Role.Admin => await _administratorManager.Register(user, institutionCode),
-        Role.Teacher => await _teacherManager.Register(user, institutionCode),
-        Role.Student => await _studentManager.Register(user),
+        Role.Admin => await _administratorManager.Register(user.Id, institutionCode),
+        Role.Teacher => await _teacherManager.Register(user.Id, institutionCode),
+        Role.Student => await _studentManager.Register(user.Id),
         _ => user != null,
         };
 

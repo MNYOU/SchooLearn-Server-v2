@@ -8,9 +8,9 @@ public interface ITaskRepository : IDisposable
 {
     DbSet<Task> Tasks { get; set; }
     
+    DbSet<Difficulty> Difficulties { get; set; }
+    
     DbSet<SolvedTask> SolvedTasks { get; set; }
-
-    // DbSet<SolvedExtendedTask> SolvedExtendedTasks { get; set; }
 
     int SaveChanges();
 

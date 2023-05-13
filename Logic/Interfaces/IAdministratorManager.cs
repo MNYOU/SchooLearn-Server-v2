@@ -4,9 +4,11 @@ namespace Logic.Interfaces;
 
 public interface IAdministratorManager
 {
-    // TODO добавить генерацию кодов приглашения
-    
-    Task<bool> Register(User user, long invitationCode);
+    Admin? Get(long id);
+
+    Admin? GetWithDetails(long id);
+
+    Task<bool> Register(long userId, long invitationCode);
 
     long? GetInvitationCode(long adminId);
     

@@ -1,6 +1,6 @@
 ﻿namespace Logic.ApiModels;
 
-public class SolvedTaskApiModel
+public class TaskFullApiModel
 {
     public long Id { get; set; }
     
@@ -12,8 +12,8 @@ public class SolvedTaskApiModel
     
     public string Subject { get; set; }
     
-    public string? ReceivedAnswer { get; set; }
-
+    public string? Answer { get; set; }
+    
     public bool IsExtended { get; set; }
 
     public bool IsPublic { get; set; }
@@ -21,6 +21,4 @@ public class SolvedTaskApiModel
     public DateTime Deadline { get; set; }
     
     public DateTime CreationDateTime { get; set; }
-    
-    public long Scores { get; set; }
 }

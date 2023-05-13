@@ -15,6 +15,8 @@ public class User
     public string Password { get; set; }
 
     public Role Role { get; set; }
-}
 
-// для teacher использовать user id и необходимые ему свойства(атрибуты) 
+    public long? InstitutionId { get; set; }
+
+    public Institution? Institution { get; set; }
+}

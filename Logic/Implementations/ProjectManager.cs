@@ -8,15 +8,12 @@ namespace Logic.Implementations;
 public class ProjectManager: IProjectManager
 {
     private readonly IApplicationRepository _repository;
+    private readonly IInstitutionManager _institutionManager;
     
-    public ProjectManager(IApplicationRepository repository)
+    public ProjectManager(IApplicationRepository repository, IInstitutionManager institutionManager)
     {
         _repository = repository;
-    }
-
-    public bool DoSomething()
-    {
-        throw new NotImplementedException();
+        _institutionManager = institutionManager;
     }
 
     public async Task<Application> CreateApplication(Institution institution)
@@ -36,16 +33,21 @@ public class ProjectManager: IProjectManager
 
     public bool ConsiderApplication(long applicationId, bool isConfirmed)
     {
+        // TODO отправка письма на почту
         var application = _repository.Applications
             .Include(a => a.Institution)
             .FirstOrDefault(a => a.Id == applicationId);
         if (application == null || application.IsReviewed)
             return false;
-        
-        // где-то должна быть генерация кодов
-        application.Institution.IsConfirmed = true;
-        application.IsReviewed = isConfirmed;
+        if (isConfirmed)
+        {
+            var institution = application.Institution;
+            institution.IsConfirmed = isConfirmed;
+            _institutionManager.GeneratePrimaryInvitationCode(institution.Id);
+        }
+        application.IsReviewed = true;
         application.ApplicationResult = isConfirmed;
+        _repository.SaveChanges();
         return true;
     }
 }

@@ -5,7 +5,7 @@ namespace Logic.Interfaces;
 
 public interface ITeacherManager
 {
-    Task<bool> Register(User user, long invitationCode);
+    Task<bool> Register(long userId, long invitationCode);
 
     Teacher? Get(long id);
     
@@ -17,9 +17,11 @@ public interface ITeacherManager
     
     IEnumerable<Group> GetMyGroups(long teacherId);
     
+    IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId);
+
     Task<bool> CreateGroup(long teacherId, GroupApiModel model);
 
-    IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId);
+    Task<bool> DisbandGroup(long teacherId, long groupId);
 
     IEnumerable<StudentApiModel> GetStudentsFromGroup(long teacherId, long groupId);
 

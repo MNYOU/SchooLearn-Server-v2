@@ -82,11 +82,40 @@ namespace Dal.EFCore.Migrations
 
                     b.Property<byte>("Scores")
                         .HasColumnType("smallint")
-                        .HasColumnName("worth");
+                        .HasColumnName("scores");
 
                     b.HasKey("Id");
 
                     b.ToTable("difficulties", (string)null);
+                });
+
+            modelBuilder.Entity("Dal.Entities.FileData", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<byte[]>("Content")
+                        .IsRequired()
+                        .HasColumnType("bytea")
+                        .HasColumnName("content");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("content_type");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("file_name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("file_data", (string)null);
                 });
 
             modelBuilder.Entity("Dal.Entities.Group", b =>
@@ -129,6 +158,27 @@ namespace Dal.EFCore.Migrations
                     b.ToTable("group", (string)null);
                 });
 
+            modelBuilder.Entity("Dal.Entities.GroupStudent", b =>
+                {
+                    b.Property<long>("GroupId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("StudentId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsApproved")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_approved");
+
+                    b.HasKey("GroupId", "StudentId");
+
+                    b.HasIndex("StudentId");
+
+                    b.ToTable("GroupStudents");
+                });
+
             modelBuilder.Entity("Dal.Entities.Institution", b =>
                 {
                     b.Property<long>("Id")
@@ -138,7 +188,7 @@ namespace Dal.EFCore.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("AdminId")
+                    b.Property<long?>("AdminId")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("InvitationCodeForTeachers")
@@ -154,8 +204,9 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("text")
                         .HasColumnName("name");
 
-                    b.Property<long>("PrimaryInvitationCode")
-                        .HasColumnType("bigint");
+                    b.Property<long?>("PrimaryInvitationCode")
+                        .HasColumnType("bigint")
+                        .HasColumnName("primary_invitation_code");
 
                     b.Property<long>("TIN")
                         .HasMaxLength(12)
@@ -175,48 +226,6 @@ namespace Dal.EFCore.Migrations
                     b.ToTable("institutions", (string)null);
                 });
 
-            modelBuilder.Entity("Dal.Entities.SolvedExtendedTask", b =>
-                {
-                    b.Property<long>("StudentId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("TaskId")
-                        .HasColumnType("bigint");
-
-                    b.Property<byte[]>("AnswerAsFile")
-                        .IsRequired()
-                        .HasColumnType("bytea");
-
-                    b.Property<string>("ContentType")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text")
-                        .HasDefaultValue("application/pdf")
-                        .HasColumnName("content_type");
-
-                    b.Property<byte>("FinalGrade")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("smallint")
-                        .HasDefaultValue((byte)0)
-                        .HasColumnName("final_grade");
-
-                    b.Property<bool>("IsChecked")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_checked");
-
-                    b.Property<DateTime>("SolveTime")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("solve_time");
-
-                    b.HasKey("StudentId", "TaskId");
-
-                    b.HasIndex("TaskId");
-
-                    b.ToTable("SolvedExtendedTasks");
-                });
-
             modelBuilder.Entity("Dal.Entities.SolvedTask", b =>
                 {
                     b.Property<long>("StudentId")
@@ -226,9 +235,17 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Answer")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("answer");
+
+                    b.Property<long?>("FileAnswerId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("IsChecked")
+                        .HasColumnType("boolean");
+
+                    b.Property<float>("Scores")
+                        .HasColumnType("real");
 
                     b.Property<DateTime>("SolveTime")
                         .HasColumnType("timestamp with time zone")
@@ -236,9 +253,12 @@ namespace Dal.EFCore.Migrations
 
                     b.HasKey("StudentId", "TaskId");
 
+                    b.HasIndex("FileAnswerId")
+                        .IsUnique();
+
                     b.HasIndex("TaskId");
 
-                    b.ToTable("solved_task", (string)null);
+                    b.ToTable("solved_tasks", (string)null);
                 });
 
             modelBuilder.Entity("Dal.Entities.Student", b =>
@@ -298,13 +318,16 @@ namespace Dal.EFCore.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Answer")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("answer");
 
                     b.Property<DateTime>("CreationDateTime")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("creation_datetime");
+
+                    b.Property<DateTime>("Deadline")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("execution_period");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -314,11 +337,13 @@ namespace Dal.EFCore.Migrations
                     b.Property<long>("DifficultyId")
                         .HasColumnType("bigint");
 
-                    b.Property<DateTime>("ExecutionPeriod")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("execution_period");
+                    b.Property<long>("InstitutionId")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("IsExtended")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsPublic")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -329,11 +354,18 @@ namespace Dal.EFCore.Migrations
                     b.Property<long>("SubjectId")
                         .HasColumnType("bigint");
 
+                    b.Property<long>("TeacherId")
+                        .HasColumnType("bigint");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DifficultyId");
 
+                    b.HasIndex("InstitutionId");
+
                     b.HasIndex("SubjectId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("tasks", (string)null);
                 });
@@ -367,6 +399,9 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("text")
                         .HasColumnName("email");
 
+                    b.Property<long?>("InstitutionId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Login")
                         .IsRequired()
                         .HasColumnType("text")
@@ -389,22 +424,9 @@ namespace Dal.EFCore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("InstitutionId");
+
                     b.ToTable("users", (string)null);
-                });
-
-            modelBuilder.Entity("GroupStudent", b =>
-                {
-                    b.Property<long>("GroupsId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("StudentsUserId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("GroupsId", "StudentsUserId");
-
-                    b.HasIndex("StudentsUserId");
-
-                    b.ToTable("GroupStudent");
                 });
 
             modelBuilder.Entity("GroupTask", b =>
@@ -447,13 +469,13 @@ namespace Dal.EFCore.Migrations
             modelBuilder.Entity("Dal.Entities.Group", b =>
                 {
                     b.HasOne("Dal.Entities.Subject", "Subject")
-                        .WithMany("GroupsStudent")
+                        .WithMany("Groups")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Dal.Entities.Teacher", "Teacher")
-                        .WithMany("GroupsStudent")
+                        .WithMany("Groups")
                         .HasForeignKey("TeacherId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -463,38 +485,40 @@ namespace Dal.EFCore.Migrations
                     b.Navigation("Teacher");
                 });
 
+            modelBuilder.Entity("Dal.Entities.GroupStudent", b =>
+                {
+                    b.HasOne("Dal.Entities.Group", "Group")
+                        .WithMany("GroupsStudent")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Dal.Entities.Student", "Student")
+                        .WithMany("GroupsStudent")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("Dal.Entities.Institution", b =>
                 {
                     b.HasOne("Dal.Entities.Admin", "Admin")
                         .WithOne("Institution")
-                        .HasForeignKey("Dal.Entities.Institution", "AdminId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("Dal.Entities.Institution", "AdminId");
 
                     b.Navigation("Admin");
                 });
 
-            modelBuilder.Entity("Dal.Entities.SolvedExtendedTask", b =>
-                {
-                    b.HasOne("Dal.Entities.Student", "Student")
-                        .WithMany("SolvedExtendedTasks")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Dal.Entities.Task", "Task")
-                        .WithMany("SolvedExtendedTasks")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-
-                    b.Navigation("Task");
-                });
-
             modelBuilder.Entity("Dal.Entities.SolvedTask", b =>
                 {
+                    b.HasOne("Dal.Entities.FileData", "FileAnswer")
+                        .WithOne()
+                        .HasForeignKey("Dal.Entities.SolvedTask", "FileAnswerId");
+
                     b.HasOne("Dal.Entities.Student", "Student")
                         .WithMany("SolvedTasks")
                         .HasForeignKey("StudentId")
@@ -506,6 +530,8 @@ namespace Dal.EFCore.Migrations
                         .HasForeignKey("TaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("FileAnswer");
 
                     b.Navigation("Student");
 
@@ -515,7 +541,7 @@ namespace Dal.EFCore.Migrations
             modelBuilder.Entity("Dal.Entities.Student", b =>
                 {
                     b.HasOne("Dal.Entities.Institution", "Institution")
-                        .WithMany("GroupsStudent")
+                        .WithMany("Students")
                         .HasForeignKey("InstitutionId");
 
                     b.HasOne("Dal.Entities.User", "User")
@@ -548,15 +574,31 @@ namespace Dal.EFCore.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dal.Entities.Institution", "Institution")
+                        .WithMany()
+                        .HasForeignKey("InstitutionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Dal.Entities.Subject", "Subject")
                         .WithMany("Tasks")
                         .HasForeignKey("SubjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Dal.Entities.Teacher", "Teacher")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Difficulty");
 
+                    b.Navigation("Institution");
+
                     b.Navigation("Subject");
+
+                    b.Navigation("Teacher");
                 });
 
             modelBuilder.Entity("Dal.Entities.Teacher", b =>
@@ -578,19 +620,13 @@ namespace Dal.EFCore.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("GroupStudent", b =>
+            modelBuilder.Entity("Dal.Entities.User", b =>
                 {
-                    b.HasOne("Dal.Entities.Group", null)
+                    b.HasOne("Dal.Entities.Institution", "Institution")
                         .WithMany()
-                        .HasForeignKey("GroupsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InstitutionId");
 
-                    b.HasOne("Dal.Entities.Student", null)
-                        .WithMany()
-                        .HasForeignKey("StudentsUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Institution");
                 });
 
             modelBuilder.Entity("GroupTask", b =>
@@ -619,37 +655,40 @@ namespace Dal.EFCore.Migrations
                     b.Navigation("Tasks");
                 });
 
-            modelBuilder.Entity("Dal.Entities.Institution", b =>
+            modelBuilder.Entity("Dal.Entities.Group", b =>
                 {
                     b.Navigation("GroupsStudent");
+                });
+
+            modelBuilder.Entity("Dal.Entities.Institution", b =>
+                {
+                    b.Navigation("Students");
 
                     b.Navigation("Teachers");
                 });
 
             modelBuilder.Entity("Dal.Entities.Student", b =>
                 {
-                    b.Navigation("SolvedExtendedTasks");
+                    b.Navigation("GroupsStudent");
 
                     b.Navigation("SolvedTasks");
                 });
 
             modelBuilder.Entity("Dal.Entities.Subject", b =>
                 {
-                    b.Navigation("GroupsStudent");
+                    b.Navigation("Groups");
 
                     b.Navigation("Tasks");
                 });
 
             modelBuilder.Entity("Dal.Entities.Task", b =>
                 {
-                    b.Navigation("SolvedExtendedTasks");
-
                     b.Navigation("SolvedTasks");
                 });
 
             modelBuilder.Entity("Dal.Entities.Teacher", b =>
                 {
-                    b.Navigation("GroupsStudent");
+                    b.Navigation("Groups");
 
                     b.Navigation("Subjects");
                 });

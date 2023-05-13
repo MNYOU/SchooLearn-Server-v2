@@ -7,11 +7,9 @@ namespace Logic.Interfaces;
 
 public interface ITaskManager
 {
-    //TODO нужно сделать получение развернутых заданий для учителя 
-
     Task? Get(long id);
-
-    Task<TaskResponseModel> GetAny();
+    
+    TaskResponseModel? GetAny(long institutionId, string? subjectName, string? difficultyName);
 
     /// <summary>
     /// Возвращает невыполненные задания для студента
@@ -19,22 +17,21 @@ public interface ITaskManager
     /// <param name="studentId">Идентификатор студента</param>
     /// <returns>Перечисление заданий</returns>
     Task<IEnumerable<TaskResponseModel>> GetCurrentForStudentAsync(long studentId);
+    
+    Task<IEnumerable<TaskResponseModel>> GetExpiredTasksAsync(long studentId, DateTime? period);
 
-    /// <summary>
-    /// Возвращает список выданных заданий учителем
-    /// </summary>
-    /// <param name="teacherId">Идентификатор учителя</param>
-    /// <returns>Перечисление заданий</returns>
-    /// эти задания должны быть с ответом
-    Task<IEnumerable<TaskResponseModel>> GetAssignedTasksAsync(long teacherId);
+    Task<IEnumerable<TaskFullApiModel>> GetAssignedTasksAsync(long teacherId, DateTime? period);
 
-    // groups??
+    Task<IEnumerable<TaskFullApiModel>> GetOutdatedTasksAsync(long teacherId, DateTime? period);
+    
     IEnumerable<StudentApiModel> GetStudentsWhoCompletedTask(long teacherId, long taskId);
 
-    Task<IEnumerable<TaskPreviewApiModel>> GetSolvedTasksAsync(long studentId);
+    IEnumerable<TaskPreviewApiModel> GetSolvedTasksPreviewAsync(long studentId);
 
     SolvedTaskApiModel? GetSolvedTask(long studentId, long taskId);
 
+    Task<bool> TryAddTaskInRepositoryAsync(long teacherId, TaskApiModel model);
+    
     /// <summary>
     /// Добавляет новое задание для группы
     /// </summary>
@@ -42,10 +39,13 @@ public interface ITaskManager
     /// <param name="teacherId">Идентификатор учителя</param>
     /// <param name="groupId">Идентификатор группы</param>
     /// <returns>Результат действия</returns>
-    Task<bool> TryAddTaskForGroupAsync(TaskApiModel model, long teacherId, long groupId);
+    Task<bool> TryAddTaskForGroupAsync(long teacherId, long groupId, TaskApiModel model);
 
-    // данный метод невозможно заставить работать
-    Task<bool> TryAddTaskForGroupsAsync(TaskApiModel model, long teacherId, IEnumerable<GroupApiModel> groupApiModels);
+    Task<bool> TryAddTaskForGroupsAsync(long teacherId, long taskId, IEnumerable<GroupApiModel> groupApiModels);
+
+    Task<bool> UpdateTaskAsync(long teacherId, TaskApiModel model);
+
+    bool DeleteTask(long teacherId, long taskId);
 
     /// <summary>
     /// Проверяет задание и записывает его в выполненные для студента
@@ -54,6 +54,8 @@ public interface ITaskManager
     /// <param name="studentId">Идентификатор студента</param>
     /// <returns>Результат проверки ответа</returns>
     bool CheckAndPointTask(TaskWithAnswerRequest model, long studentId);
+
+    bool GetUnchecked(long teacherId);
 
     /// <summary>
     /// Ставит оценку ученику после проверки учителем

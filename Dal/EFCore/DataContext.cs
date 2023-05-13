@@ -12,7 +12,7 @@ namespace Dal.EFCore;
 
 public class DataContext : DbContext, IInstitutionRepository, IUserRepository, IAdministratorRepository,
     IApplicationRepository, ITeacherRepository, IStudentRepository, ITaskRepository, ISubjectRepository,
-    IDifficultyRepository, IGroupRepository
+    IGroupRepository
 {
     public DbSet<Institution> Institutions { get; set; }
     public DbSet<Application> Applications { get; set; }

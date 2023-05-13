@@ -1,8 +1,10 @@
 using System.Text;
+using API.Controllers;
 using Dal.EFCore;
 using Dal.EFCore.Repositories;
 using Dal.Repositories;
 using Logic.AutoMapper;
+using Logic.Helpers;
 using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -63,16 +65,17 @@ services.TryAddScoped<IStudentRepository, DataContext>();
 services.TryAddScoped<IGroupRepository, DataContext>();
 services.TryAddScoped<ITaskRepository, DataContext>();
 services.TryAddScoped<ISubjectRepository, DataContext>();
-services.TryAddScoped<IDifficultyRepository, DataContext>();
 
 services.TryAddScoped<IAccountManager, AccountManager>();
 services.TryAddScoped<IInstitutionManager, InstitutionManager>();
 services.TryAddScoped<IProjectManager, ProjectManager>();
 services.TryAddScoped<IAdministratorManager, AdministratorManager>();
-services.TryAddScoped<IStudentManager, StudentManager>();
 services.TryAddScoped<ITeacherManager, TeacherManager>();
-services.TryAddScoped<IStudentManager, IStudentManager>();
+services.TryAddScoped<IStudentManager, StudentManager>();
 services.TryAddScoped<ITaskManager, TaskManager>();
+services.TryAddScoped<IRatingManager, RatingManager>();
+
+services.TryAddSingleton<Random>();
 
 var app = builder.Build();
 

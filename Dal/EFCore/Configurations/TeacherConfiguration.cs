@@ -15,7 +15,7 @@ public class TeacherConfiguration: IEntityTypeConfiguration<Teacher>
             .HasKey(t => t.UserId);
 
         builder
-            .HasOne<User>(t => t.User)
+            .HasOne(t => t.User)
             .WithOne();
 
         builder

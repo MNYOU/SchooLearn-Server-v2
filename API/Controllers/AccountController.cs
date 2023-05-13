@@ -10,6 +10,8 @@ public class AccountController : ControllerBase
 {
     private readonly IAccountManager _manager;
 
+    private long Id => long.Parse(User.FindFirst("Id")?.Value ?? "0");
+
     public AccountController(IAccountManager manager)
     {
         _manager = manager;

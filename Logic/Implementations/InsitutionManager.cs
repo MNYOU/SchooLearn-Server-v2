@@ -1,10 +1,9 @@
-﻿using System.Net.Mime;
-using AutoMapper;
+﻿using AutoMapper;
 using Dal.Entities;
 using Dal.Repositories;
 using Logic.ApiModels;
+using Logic.Helpers;
 using Logic.Interfaces;
-using Microsoft.EntityFrameworkCore;
 
 namespace Logic.Implementations;
 
@@ -19,6 +18,12 @@ public class InstitutionManager : IInstitutionManager
         _mapper = mapper;
         _repository = repository;
         _projectManager = projectManager;
+    }
+
+    public Institution? Get(long id)
+    {
+        return _repository.Institutions
+            .FirstOrDefault(i => i.Id == id);
     }
 
     public async Task<Application?> CreateApplication(InstitutionApiModel model)
@@ -37,22 +42,52 @@ public class InstitutionManager : IInstitutionManager
     {
         return _repository.Institutions
             .Where(i => i.IsConfirmed)
-            // mapping
-            .Select(i => new InstitutionApiModel())
+            .Select(i => _mapper.Map<InstitutionApiModel>(i))
             .AsEnumerable();
+    }
+
+    public IEnumerable<long> GetPrimaryInvitationCodes()
+    {
+        return _repository.Institutions
+            .Where(i => i.IsConfirmed && i.PrimaryInvitationCode != null)
+            .Select(i => i.PrimaryInvitationCode.Value);
+    }
+
+    public IEnumerable<long> GetOccupiedInvitationCodes()
+    {
+        return _repository.Institutions
+            .Where(i => i.IsConfirmed && i.InvitationCodeForTeachers != null)
+            .Select(i => i.InvitationCodeForTeachers.Value);
+    }
+
+    public bool GeneratePrimaryInvitationCode(long institutionId)
+    {
+        var institution = _repository.Institutions
+            .FirstOrDefault(i => i.Id == institutionId);
+        if (institution is { IsConfirmed: true })
+        {
+            var codes = GetPrimaryInvitationCodes();
+            var newCode = Generator.GenerateInvitationCode(codes);
+            institution.PrimaryInvitationCode = newCode;
+            _repository.SaveChanges();
+            return true;
+        }
+
+        return false;
     }
 
     public Institution? GetByPrimaryInvitationCode(long code)
     {
-        var institution =
-            _repository.Institutions.FirstOrDefault(i => i.IsConfirmed && i.PrimaryInvitationCode == code);
+        var institution = _repository.Institutions
+                .FirstOrDefault(i => i.IsConfirmed && i.PrimaryInvitationCode == code);
         return institution;
     }
 
     public Institution? GetByInvitationCode(long code)
     {
         var institution =
-            _repository.Institutions.FirstOrDefault(i => i.IsConfirmed && i.InvitationCodeForTeachers == code);
+            _repository.Institutions
+                .FirstOrDefault(i => i.IsConfirmed && i.InvitationCodeForTeachers == code);
         return institution;
     }
 

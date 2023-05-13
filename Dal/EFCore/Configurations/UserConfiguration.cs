@@ -35,5 +35,10 @@ public class UserConfiguration: IEntityTypeConfiguration<User>
         builder
             .Property(u => u.Role)
             .HasColumnName("role");
+
+        builder
+            .HasOne(u => u.Institution)
+            .WithMany()
+            .HasForeignKey(u => u.InstitutionId);
     }
 }

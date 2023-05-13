@@ -1,8 +1,8 @@
-﻿using System.Data;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using Dal.Enums;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;

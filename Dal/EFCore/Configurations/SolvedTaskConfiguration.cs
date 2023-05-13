@@ -19,6 +19,10 @@ public class SolvedTaskConfiguration: IEntityTypeConfiguration<SolvedTask>
             .HasColumnName("answer");
 
         builder
+            .HasOne<FileData>(s => s.FileAnswer)
+            .WithOne();
+
+        builder
             .Property(s => s.SolveTime)
             .HasColumnName("solve_time");
 

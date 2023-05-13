@@ -14,7 +14,8 @@ public class SolvedTask
 
     public string? Answer { get; set; }
 
-    public FileData FileAnswer { get; set; }
+    public long? FileAnswerId { get; set; }
+    public FileData? FileAnswer { get; set; }
     
     public bool IsChecked { get; set; }
 

@@ -31,5 +31,5 @@ public record RegistrationApiModel
     public string PasswordConfirm { get; init; }
     
     // или без Required и так все работать будет
-    public long? InstitutionCode { get; init; }
+    public long? InvitationCode { get; init; }
 }

@@ -35,6 +35,13 @@ public class TeacherController: ControllerBase
         return result ? Ok() : StatusCode(500);
     }
 
+    [HttpDelete("group/{groupId:long}/disband")]
+    public async Task<IActionResult> DisbandGroup([FromRoute] long groupId)
+    {
+        var result = await _manager.DisbandGroup(Id, groupId);
+        return result ? Ok() : StatusCode(500);
+    }
+
     [HttpGet("group/{groupId:long}/all")]
     public IActionResult GetStudentsFromGroup([FromRoute] long groupId)
     {

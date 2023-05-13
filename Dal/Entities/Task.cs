@@ -1,6 +1,6 @@
 ﻿namespace Dal.Entities;
 
-public class Task
+public record Task
 {
     public long Id { get; set; }
 
@@ -16,16 +16,24 @@ public class Task
     
     public Difficulty Difficulty { get; set; }
     
-    public string Answer { get; set; }
+    public string? Answer { get; set; }
 
-    // public bool AnswerAsFile { get; set; } = false;
-    
+    public bool IsPublic { get; set; }
+
     public bool IsExtended { get; set; }
-    
-    public DateTime CreationDateTime { get; set; } = DateTime.Now;
 
-    public DateTime ExecutionPeriod { get; set; }
-    
+    public DateTime CreationDateTime { get; set; }
+
+    public DateTime Deadline { get; set; }
+
+    public long InstitutionId { get; set; }
+
+    public Institution Institution { get; set; }
+
+    public long TeacherId { get; set; }
+
+    public Teacher Teacher { get; set; }
+
     public ICollection<SolvedTask> SolvedTasks { get; set; }
     
     // public ICollection<SolvedExtendedTask> SolvedExtendedTasks { get; set; }

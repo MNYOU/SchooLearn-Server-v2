@@ -4,8 +4,6 @@ namespace Logic.Interfaces;
 
 public interface IProjectManager
 {
-    bool DoSomething();
-    
     Task<Application> CreateApplication(Institution institution);
     
     IEnumerable<Application> GetNotReviewedApplications();

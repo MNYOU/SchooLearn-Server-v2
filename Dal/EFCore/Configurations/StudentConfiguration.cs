@@ -16,7 +16,7 @@ public class StudentConfiguration: IEntityTypeConfiguration<Student>
             .HasKey(s => s.UserId);
 
         builder
-            .HasOne<User>(s => s.User)
+            .HasOne(s => s.User)
             .WithOne();
 
         builder

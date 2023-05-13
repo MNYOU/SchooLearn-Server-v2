@@ -20,10 +20,10 @@ public class TaskController : ControllerBase
         _manager = manager;
     }
 
-    [HttpGet("get/{id:long}")]
-    public IActionResult Get([FromRoute] long id)
+    [HttpGet("/any")]
+    public IActionResult GetAny([FromQuery] long institutionId, [FromQuery] string? subject, [FromQuery] string? difficulty)
     {
-        var task = _manager.Get(id);
+        var task = _manager.GetAny(institutionId, subject, difficulty);
         if (task is null)
             return BadRequest();
             // return StatusCode(204);
@@ -32,22 +32,30 @@ public class TaskController : ControllerBase
 
     [Authorize(nameof(Role.Student))]
     [HttpGet("current/")]
-    public async Task<IActionResult> GetCurrentForStudent()
+    public async Task<IActionResult> GetCurrentForStudentAsync()
     {
         var tasks = await _manager.GetCurrentForStudentAsync(Id);
         return Ok(tasks);
     }
 
     [Authorize(nameof(Role.Student))]
-    [HttpGet("solved/all")]
-    public async Task<IActionResult> GetSolvedTasks()
+    [HttpGet("expired/all")]
+    public async Task<IActionResult> GetExpiredForStudentAsync([FromQuery] DateTime? period)
     {
-        var tasks = await _manager.GetSolvedTasksAsync(Id);
+        var tasks = await _manager.GetExpiredTasksAsync(Id, period);
         return Ok(tasks);
     }
 
     [Authorize(nameof(Role.Student))]
-    [HttpGet("solved/{id:long}")]
+    [HttpGet("solved/all")]
+    public IActionResult GetSolvedTasks()
+    {
+        var tasks =  _manager.GetSolvedTasksPreviewAsync(Id);
+        return Ok(tasks);
+    }
+
+    [Authorize(nameof(Role.Student))]
+    [HttpGet("solved/{taskId:long}")]
     public IActionResult GetSolvedTask([FromRoute] long taskId)
     {
         var task = _manager.GetSolvedTask(Id, taskId);
@@ -59,15 +67,23 @@ public class TaskController : ControllerBase
 
     [Authorize(nameof(Role.Teacher))]
     [HttpGet("assigned/")]
-    public async Task<IActionResult> GetAssigned()
+    public async Task<IActionResult> GetAssignedAsync([FromQuery] DateTime? period)
     {
-        var tasks = await _manager.GetAssignedTasksAsync(Id);
+        var tasks = await _manager.GetAssignedTasksAsync(Id, period);
         return Ok(tasks);
     }
 
     [Authorize(nameof(Role.Teacher))]
-    [HttpGet("students-completed-tasks/")]
-    public IActionResult GetStudentsCompetedTasks([FromQuery] long taskId)
+    [HttpGet("outdated/")]
+    public async Task<IActionResult> GetOutdatedAsync([FromQuery] DateTime? period)
+    {
+        var tasks = await _manager.GetOutdatedTasksAsync(Id, period);
+        return Ok(tasks);
+    }
+
+    [Authorize(nameof(Role.Teacher))]
+    [HttpGet("/{taskId:long}/completed-students")]
+    public IActionResult GetStudentsCompetedTasks([FromRoute] long taskId)
     { 
         var students = _manager.GetStudentsWhoCompletedTask(Id, taskId);
         return Ok(students);
@@ -76,13 +92,48 @@ public class TaskController : ControllerBase
 
     [Authorize(Roles = nameof(Role.Teacher))]
     [HttpPost("add")]
-    public async Task<IActionResult> AddAsync([FromBody] TaskApiModel model, [FromQuery] long groupId)
+    public async Task<IActionResult> AddAsync([FromBody] TaskApiModel model, [FromQuery] long? groupId)
     {
-        // TODO как сделать добавление нескольких групп
-        if (model.IsExtended != null && !model.IsExtended.Value && model.Answer is null or "")
+        if (model is { IsExtended: false, Answer: null or "" })
             return BadRequest("Ответ не может быть null, если задание не является расширенным");
-        var result = await _manager.TryAddTaskForGroupAsync(model, Id, groupId);
+        var result = false;
+        if (groupId is null)
+            result = await _manager.TryAddTaskInRepositoryAsync(Id, model);
+        else
+            result = await _manager.TryAddTaskForGroupAsync(Id, groupId.Value, model);
         return result ? Ok() : StatusCode(500);
+    }
+
+    [Authorize(Roles = nameof(Role.Teacher))]
+    [HttpPost("/{taskId:long}/for-group")]
+    public async Task<IActionResult> AddForGroups([FromBody] IEnumerable<GroupApiModel> groups,[FromRoute] long taskId)
+    {
+        var result = await _manager.TryAddTaskForGroupsAsync(Id, taskId, groups);
+        return result
+            ? Ok()
+            : StatusCode(500);
+    }
+
+    [Authorize(Roles = nameof(Role.Teacher))]
+    // [HttpPost("/{taskId:long}/update")]
+    [HttpPost("/update")]
+    public async Task<IActionResult> UpdateAsync([FromBody] TaskApiModel model)
+    {
+        var result = await _manager.UpdateTaskAsync(Id, model);
+        return result
+            ? Ok()
+            : BadRequest();
+    }
+    
+
+    [Authorize(Roles = nameof(Role.Teacher))]
+    [HttpPost("/{taskId:long}/delete")]
+    public IActionResult Delete([FromRoute] long taskId)
+    {
+        var result = _manager.DeleteTask(Id, taskId);
+        return result
+            ? Ok()
+            : BadRequest();
     }
 
     [Authorize(Roles = nameof(Role.Student))]
@@ -94,19 +145,21 @@ public class TaskController : ControllerBase
     }
 
     [Authorize(Roles = nameof(Role.Student))]
-    [HttpPost("upload-answer/")]
-    public async Task<IActionResult> UploadAnswer([FromBody] IFormFile file, [FromQuery] long taskId)
+    [HttpPost("/{taskId:long}/upload-answer/")]
+    public async Task<IActionResult> UploadAnswer([FromBody] IFormFile file, [FromRoute] long taskId)
     {
         // помимо статус кода было бы славно возвращать текст ошибки
         if (file.ContentType != "application/pdf")
             return BadRequest("тип фийла должен быть .pdf");
         var result = await _manager.UploadAnswerToTaskAsync(Id, taskId, file);
-        return result ? Ok() : StatusCode(500);
+        return result 
+            ? Ok() 
+            : StatusCode(500);
     }
 
     [Authorize(nameof(Role.Student))]
-    [HttpGet("download-answer")]
-    public IActionResult DownloadAnswer(long taskId)
+    [HttpGet("/{taskId:long}/download-answer")]
+    public IActionResult DownloadAnswer([FromRoute] long taskId)
     {
         var fileAnswer = _manager.DownloadAnswer(Id, taskId);
         if (fileAnswer is null)
@@ -118,6 +171,7 @@ public class TaskController : ControllerBase
     [HttpGet("unchecked/")]
     public IActionResult GetUncheckedTasks()
     {
+        
         // получаем вообще все непроверенные для учителя
         throw new NotImplementedException();
     }

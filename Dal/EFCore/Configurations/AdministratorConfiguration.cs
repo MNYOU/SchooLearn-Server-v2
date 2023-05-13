@@ -15,7 +15,7 @@ public class AdministratorConfiguration : IEntityTypeConfiguration<Admin>
             .HasKey(a => a.UserId);
 
         builder
-            .HasOne<User>(a => a.User)
+            .HasOne(a => a.User)
             .WithOne();
 
         builder

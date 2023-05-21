@@ -10,13 +10,21 @@ public class TaskResponseModel
 
     public string Description { get; set; }
 
-    public Subject Subject { get; set; }
-
-    public Difficulty Difficulty { get; set; }
+    public SubjectApiModel Subject { get; set; }
     
+    public Difficulty Difficulty { get; set; }
+
+    public TeacherApiModel Teacher { get; set; }
+
+    public InstitutionApiModel Institution { get; set; }
+    
+    public string? Answer { get; set; }
+
+    public bool IsPublic { get; set; }
+
     public bool IsExtendedTask { get; set; }
     
     public DateTime CreationDateTime { get; set; }
 
-    public DateTime ExecutionPeriod { get; set; }
+    public DateTime Deadline { get; set; }
 }

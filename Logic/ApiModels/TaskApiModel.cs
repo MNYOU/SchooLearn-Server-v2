@@ -28,5 +28,5 @@ public class TaskApiModel
     
     public DateTime Deadline { get; set; }
     
-    public DateTime CreationDateTime { get; set; }
+    public DateTime? CreationDateTime { get; set; }
 }

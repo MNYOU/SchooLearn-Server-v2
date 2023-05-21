@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Dal.Enums;
+using Dal.Validation;
 
 namespace Logic.ApiModels;
 
@@ -7,7 +8,7 @@ public record RegistrationApiModel
 {
     [Required(ErrorMessage = "Поле \"Никнейм\" обязательно")]
     [MinLength(5)]
-    [MaxLength(15)]
+    [MaxLength(40)]
     public string Nickname { get; init; }
     
     [Required]
@@ -23,7 +24,7 @@ public record RegistrationApiModel
     public Role Role { get; set; }
 
     [Required]
-    [DataType(DataType.Password)]
+    [Password]
     public string Password { get; init; }
 
     [Required]
@@ -31,5 +32,5 @@ public record RegistrationApiModel
     public string PasswordConfirm { get; init; }
     
     // или без Required и так все работать будет
-    public long? InvitationCode { get; init; }
+    public string? InvitationCode { get; init; }
 }

@@ -2,9 +2,6 @@
 
 public class Institution
 {
-    // коды должны генерироваться сразу или после подтверждения
-    // второй вариант оптимальнее
-    
     public long Id { get; set; }
     
     public string Name { get; set; }
@@ -15,11 +12,11 @@ public class Institution
     
     public bool IsConfirmed { get; set; }
     
-    public long? PrimaryInvitationCode { get; set; }
+    public string? PrimaryInvitationCode { get; set; }
     
-    public long? InvitationCodeForTeachers { get; set; }
+    public string? InvitationCodeForTeachers { get; set; }
     
-    public long? AdminId { get; set; }
+    // public long? AdminId { get; set; }
 
     public Admin? Admin { get; set; }
 

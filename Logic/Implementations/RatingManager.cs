@@ -5,6 +5,11 @@ namespace Logic.Implementations;
 
 public class RatingManager: IRatingManager
 {
+    public RatingApiModel GetMyRating(long userId)
+    {
+        throw new NotImplementedException();
+    }
+
     public IEnumerable<RatingApiModel>? GetGlobal(long userId, long? institutionId)
     {
         throw new NotImplementedException();

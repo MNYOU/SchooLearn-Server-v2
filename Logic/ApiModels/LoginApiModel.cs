@@ -9,6 +9,5 @@ public record LoginApiModel
     public string Login { get; set; }
 
     [Required]
-    [Password]
     public string Password { get; set; }
 }

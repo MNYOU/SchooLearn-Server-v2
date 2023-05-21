@@ -8,9 +8,9 @@ public interface IAdministratorManager
 
     Admin? GetWithDetails(long id);
 
-    Task<bool> Register(long userId, long invitationCode);
+    Task<bool> Register(long userId, string invitationCode, IAccountManager accountManager);
 
-    long? GetInvitationCode(long adminId);
+    string? GetInvitationCode(long adminId);
     
     bool GenerateNewInvitationCode(long adminId);
 }

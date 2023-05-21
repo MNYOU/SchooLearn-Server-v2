@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Dal.EFCore;
 using Dal.Entities;
 using Dal.Enums;
 using Dal.Repositories;
@@ -15,33 +16,42 @@ public class TeacherManager : ITeacherManager
     private readonly ITeacherRepository _repository;
     private readonly ISubjectRepository _subjectRepository;
     private readonly IGroupRepository _groupRepository;
-    private readonly IAccountManager _accountManager;
     private readonly IInstitutionManager _institutionManager;
+    private readonly DataContext _context;
 
     public TeacherManager(IMapper mapper, ITeacherRepository repository, IInstitutionManager institutionManager,
-        ISubjectRepository subjectRepository, IGroupRepository groupRepository, IAccountManager accountManager)
+        ISubjectRepository subjectRepository, IGroupRepository groupRepository, DataContext context)
     {
         _mapper = mapper;
         _repository = repository;
         _institutionManager = institutionManager;
         _subjectRepository = subjectRepository;
         _groupRepository = groupRepository;
-        _accountManager = accountManager;
+        _context = context;
     }
 
-    public async Task<bool> Register(long userId, long invitationCode)
+    public async Task<bool> Register(long userId, string invitationCode, IAccountManager accountManager)
     {
-        var user = await _accountManager.GetAsync(userId);
+        var user = await accountManager.GetWithDetailsAsync(userId);
         if (user is null || user.Role != Role.Teacher || _repository.Teachers.Any(t => t.UserId == user.Id))
             return false;
-
         var institution = _institutionManager.GetByInvitationCode(invitationCode);
-        if (institution is null) return false;
+        if (institution is null)
+            return false;
+        var teacher = new Teacher { UserId = userId, InstitutionId = institution.Id };
+        user.InstitutionId = institution.Id;
+        try
+        {
+            accountManager.Update(user);
+            await _repository.Teachers.AddAsync(teacher);
+            await _repository.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
 
-        user.Institution = institution;
-        var teacher = new Teacher { User = user, Institution = institution };
-        await _repository.Teachers.AddAsync(teacher);
-        await _repository.SaveChangesAsync();
         return true;
     }
 
@@ -64,7 +74,7 @@ public class TeacherManager : ITeacherManager
         return _repository.Teachers
             .Include(t => t.User)
             .Include(t => t.Institution)
-            .Include(t => t.Subjects)
+            // .Include(t => t.Subjects)
             .Include(t => t.Groups)
             .FirstOrDefault(t => t.UserId == id);
     }
@@ -74,7 +84,7 @@ public class TeacherManager : ITeacherManager
         return await _repository.Teachers
             .Include(t => t.User)
             .Include(t => t.Institution)
-            .Include(t => t.Subjects)
+            // .Include(t => t.Subjects)
             .Include(t => t.Groups)
             .FirstOrDefaultAsync(t => t.UserId == id);
     }
@@ -85,19 +95,31 @@ public class TeacherManager : ITeacherManager
             .Where(g => g.TeacherId == teacherId);
     }
 
-    public IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId)
+    public IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId, long? subjectId)
     {
-        return GetMyGroups(teacherId)
+        var groups = GetMyGroups(teacherId);
+        if (subjectId != null)
+            groups = groups
+                .Where(g => g.SubjectId == subjectId);
+
+        return groups
             .Select(g => _mapper.Map<GroupApiModel>(g));
     }
 
-    public async Task<bool> CreateGroup(long teacherId, GroupApiModel model)
+    public async Task<bool> CreateGroup(long teacherId, long subjectId, GroupApiModel model)
     {
         var teacher = await GetAsync(teacherId);
-        if (teacher is null) return false;
+        var subject = await _subjectRepository.Subjects
+            .FirstOrDefaultAsync(s => s.Id == subjectId);
+        if (teacher is null || subject is null)
+            return false;
+        var occupiedCodes = _groupRepository.Groups.Select(g => g.InvitationCode).AsEnumerable();
         var group = _mapper.Map<Group>(model);
-        teacher.Groups.Add(group);
-        _repository.Teachers.Update(teacher);
+        group.TeacherId = teacherId;
+        group.SubjectId = subjectId;
+        group.InvitationCode = Generator.GenerateInvitationCode(occupiedCodes);
+        await _groupRepository.Groups.AddAsync(group);
+        await _groupRepository.SaveChangesAsync();
         return true;
     }
 
@@ -155,6 +177,7 @@ public class TeacherManager : ITeacherManager
 
     public bool ConsiderApplication(long teacherId, long groupId, long studentId, bool isApproved)
     {
+        // TODO сейчас заявки автоматические
         if (!TeacherIsCreatorOfGroup(teacherId, groupId)) return false;
         var groupStudents = _groupRepository.GroupStudents
             .Include(gs => gs.Group)
@@ -183,7 +206,7 @@ public class TeacherManager : ITeacherManager
         return true;
     }
 
-    public async Task<long?> GetGroupInvitationCodeAsync(long teacherId, long groupId)
+    public async Task<string?> GetGroupInvitationCodeAsync(long teacherId, long groupId)
     {
         var group = await _groupRepository.Groups
             .FirstOrDefaultAsync(g => g.Id == groupId && g.TeacherId == teacherId);
@@ -206,21 +229,11 @@ public class TeacherManager : ITeacherManager
         return true;
     }
 
-
-    public IEnumerable<SubjectApiModel> GetMySubjects(long teacherId)
-    {
-        return _subjectRepository.Subjects
-            .Where(s => s.TeacherId == teacherId)
-            .Select(s => _mapper.Map<SubjectApiModel>(s));
-    }
-
     public async Task<bool> AddSubject(long teacherId, SubjectApiModel model)
     {
-        var teacher = await GetAsync(teacherId);
-        if (teacher is null) return false;
+        return false;
         var subject = _mapper.Map<Subject>(model);
-        teacher.Subjects.Add(subject);
-        _repository.Teachers.Update(teacher);
-        return true;
+        await _subjectRepository.Subjects.AddAsync(subject);
+        await _repository.SaveChangesAsync();
     }
 }

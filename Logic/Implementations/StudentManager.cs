@@ -14,20 +14,17 @@ public class StudentManager : IStudentManager
     private readonly IMapper _mapper;
     private readonly IStudentRepository _repository;
     private readonly IGroupRepository _groupRepository;
-    private readonly IAccountManager _accountManager;
 
-    public StudentManager(IStudentRepository repository, IGroupRepository groupRepository, IMapper mapper,
-        IAccountManager accountManager)
+    public StudentManager(IStudentRepository repository, IGroupRepository groupRepository, IMapper mapper)
     {
         _repository = repository;
         _groupRepository = groupRepository;
         _mapper = mapper;
-        _accountManager = accountManager;
     }
 
-    public async Task<bool> Register(long userId)
+    public async Task<bool> Register(long userId, IAccountManager accountManager)
     {
-        var user = await _accountManager.GetAsync(userId);
+        var user = await accountManager.GetAsync(userId);
         if (user is null || user.Role != Role.Student || user.Id == 0 ||
             _repository.Students.Any(s => s.UserId == user.Id))
             return false;
@@ -76,23 +73,26 @@ public class StudentManager : IStudentManager
             .FirstOrDefaultAsync(s => s.UserId == id);
     }
 
-    public IEnumerable<StudentApiModel>? SearchByNickname(long userId, long institutionId, string nickname)
+    public IEnumerable<StudentApiModel>? SearchByNickname(long userId, long? institutionId, string nickname,
+        IAccountManager accountManager)
     {
-        var user = _accountManager.Get(userId);
-        var hasAccess = UserHelper.HasAccessToUsers(user, institutionId, Role.Student);
-        if (!hasAccess) return null;
+        var user = accountManager.Get(userId);
+        if (user is null || !UserHelper.HasAccessToUsers(user, institutionId, Role.Student))
+            return null;
         return _repository.Students
-            .Where(s => s.InstitutionId == institutionId && UserHelper.IsPartiallyEqual(nickname, s.User.Nickname))
+            .Where(s => institutionId == null || s.InstitutionId == institutionId &&
+                UserHelper.IsPartiallyEqual(nickname, s.User.Nickname))
             .OrderBy(s => s.User.Nickname)
             .Include(s => s.User)
             .Select(s => _mapper.Map<StudentApiModel>(s));
     }
 
-    public IEnumerable<StudentApiModel>? GetAllByInstitution(long userId, long institutionId)
+    public IEnumerable<StudentApiModel>? GetAllByInstitution(long userId, long institutionId,
+        IAccountManager accountManager)
     {
-        var user = _accountManager.Get(userId);
-        var hasAccess = UserHelper.HasAccessToUsers(user, institutionId, Role.Student);
-        if (!hasAccess) return null;
+        var user = accountManager.Get(userId);
+        if (user is null || !UserHelper.HasAccessToUsers(user, institutionId, Role.Student))
+            return null;
         return _repository.Students
             .Where(s => s.InstitutionId == institutionId)
             .OrderBy(s => s.User.Nickname)
@@ -108,8 +108,18 @@ public class StudentManager : IStudentManager
             .Select(gs => _mapper.Map<GroupApiModel>(gs.Group));
     }
 
+    public string? GetTeacherName(long studentId, long groupId)
+    {
+        var group = _groupRepository.Groups
+            .Include(g => g.Teacher)
+            .ThenInclude(t => t.User)
+            .FirstOrDefault(g =>
+                g.Id == groupId && g.GroupsStudent.Any(gs => gs.IsApproved && gs.StudentId == studentId));
+        return group?.Teacher.User.Nickname;
+    }
 
-    public async Task<bool> CreateApplicationToGroup(long studentId, long groupId, long invitationCode)
+
+    public async Task<bool> CreateApplicationToGroup(long studentId, long groupId, string invitationCode, ITeacherManager teacherManager)
     {
         var student = await _repository.Students
             .FirstOrDefaultAsync(s => s.UserId == studentId);
@@ -118,11 +128,15 @@ public class StudentManager : IStudentManager
             .FirstOrDefaultAsync(g => g.Id == groupId && g.InvitationCode == invitationCode);
         if (student is null || group is null)
             return false;
-        if (student.InstitutionId != null && student.InstitutionId != group.Teacher.InstitutionId)
+        if (student.InstitutionId != null && student.InstitutionId != group.Teacher.InstitutionId ||
+            _groupRepository.GroupStudents.Any(gs => gs.StudentId == studentId || gs.GroupId == groupId))
             return false;
-        var groupStudent = new GroupStudent { Student = student, Group = group, IsApproved = false };
+        var groupStudent = new GroupStudent { StudentId = studentId, GroupId = groupId, IsApproved = false };
         await _groupRepository.GroupStudents.AddAsync(groupStudent);
         await _groupRepository.SaveChangesAsync();
+                
+        // TODO заявки сразу утверждаются
+        teacherManager.ConsiderApplication(group.TeacherId, groupId, studentId, true);
         return true;
     }
 

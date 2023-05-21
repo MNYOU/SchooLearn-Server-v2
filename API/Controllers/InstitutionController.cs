@@ -24,9 +24,9 @@ public class InstitutionController: ControllerBase
     
     [AllowAnonymous]
     [HttpPost("create/")]
-    public async Task<IActionResult> CreateApplication([FromBody] InstitutionApiModel model)
+    public async Task<IActionResult> CreateApplication([FromBody] InstitutionApiRequest request, [FromServices] IProjectManager projectManager)
     {
-        var result = await _manager.CreateApplication(model);
+        var result = await _manager.CreateApplication(request, projectManager);
         return result != null ? Ok() : StatusCode(500);
     }
 
@@ -39,19 +39,18 @@ public class InstitutionController: ControllerBase
     }
 
     [HttpGet("{institutionId:long}/students/all")]
-    public IActionResult GetAllStudents([FromRoute] long institutionId)
+    public IActionResult GetAllStudents([FromRoute] long institutionId, [FromServices] IAccountManager accountManager)
     {
-        var students = _studentManager.GetAllByInstitution(Id, institutionId);
+        var students = _studentManager.GetAllByInstitution(Id, institutionId, accountManager);
         if (students is null) return StatusCode(403);
         return Ok(students);
     }
 
     [HttpGet("{institutionId:long}/students/search")]
-    public IActionResult SearchStudentsByNickname([FromRoute] long institutionId, [FromQuery] string nickname)
+    public IActionResult SearchStudentsByNickname([FromRoute] long institutionId, [FromQuery] string nickname, [FromServices] IAccountManager accountManager)
     {
-        var students = _studentManager.SearchByNickname(Id, institutionId, nickname);
+        var students = _studentManager.SearchByNickname(Id, institutionId, nickname, accountManager);
         if (students is null) return StatusCode(403);
         return Ok(students);
     }
-    
 }

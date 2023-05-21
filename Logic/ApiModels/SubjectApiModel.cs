@@ -9,3 +9,4 @@ public class SubjectApiModel
     [Required(ErrorMessage = "Название предмета обязательно")]
     public string Name { get; set; }
 }
+

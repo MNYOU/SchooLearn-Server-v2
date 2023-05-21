@@ -6,5 +6,5 @@ public record TaskPreviewApiModel
 
     public string Name { get; set; }
 
-    public float Scores { get; set; }
+    public DateTime Deadline { get; set; }
 }

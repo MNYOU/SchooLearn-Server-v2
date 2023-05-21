@@ -1,6 +1,7 @@
 ﻿using System.Net.Mail;
 using System.Security.Claims;
 using Dal.Enums;
+using Dal.Repositories;
 using Logic.ApiModels;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -22,16 +23,16 @@ public class TeacherController: ControllerBase
     }
 
     [HttpGet("groups")]
-    public IActionResult GetMyGroups()
+    public IActionResult GetMyGroups([FromQuery] long? subjectId)
     {
-        var groups = _manager.GetMyGroupsApiModels(Id);
+        var groups = _manager.GetMyGroupsApiModels(Id, subjectId);
         return Ok(groups);
     }
     
     [HttpPost("group/create")]
-    public async Task<IActionResult> Create([FromBody] GroupApiModel model)
+    public async Task<IActionResult> Create([FromBody] GroupApiModel model, [FromQuery] long subjectId)
     {
-        var result = await _manager.CreateGroup(Id, model);
+        var result = await _manager.CreateGroup(Id, subjectId,  model);
         return result ? Ok() : StatusCode(500);
     }
 
@@ -68,7 +69,7 @@ public class TeacherController: ControllerBase
     {
         var code = await _manager.GetGroupInvitationCodeAsync(Id, groupId);
         return code != null
-            ? Ok(code.Value)
+            ? Ok(new {Code = code})
             : BadRequest();
     }
 
@@ -76,20 +77,22 @@ public class TeacherController: ControllerBase
     public IActionResult GenerateNewInvitationCode([FromRoute] long groupId)
     {
         var result = _manager.GenerateNewInvitationCode(Id, groupId);
-        return result ? Ok() : StatusCode(500);
+        return result ? Ok(true) : Ok(false);
     }
 
 
     [HttpGet("subjects")]
-    public IActionResult GetMySubjects()
+    public IActionResult GetMySubjects([FromServices] ITaskManager taskManager)
     {
-        var subjects = _manager.GetMySubjects(Id);
+        var subjects = taskManager.GetSubjects();
         return Ok(subjects);
     }
 
     [HttpPost("subject/add")]
+    [Obsolete]
     public async Task<IActionResult> AddSubjectToMy([FromBody] SubjectApiModel model)
     {
+        return StatusCode(501);
         var result = await _manager.AddSubject(Id, model);
         return result ? Ok() : StatusCode(500);
     }

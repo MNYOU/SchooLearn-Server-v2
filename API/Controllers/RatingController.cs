@@ -1,4 +1,6 @@
-﻿using Logic.Interfaces;
+﻿using System.Security.Claims;
+using Dal.Enums;
+using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,10 +14,27 @@ public class RatingController : ControllerBase
     private readonly IRatingManager _manager;
 
     private long Id => long.Parse(User.FindFirst("Id")?.Value ?? "0");
+    
+    private Role UserRole
+    {
+        get
+        {
+            var value = User.FindFirst(ClaimTypes.Role)?.Value;
+            return value != null ? Enum.Parse<Role>(value) : Role.Default;
+        }
+    }
 
     public RatingController(IRatingManager manager)
     {
         _manager = manager;
+    }
+
+    [HttpGet("my/")]
+    public IActionResult GetMyRating()
+    {
+        if (UserRole != Role.Student) return StatusCode(403);
+        return Ok(_manager.GetMyRating(Id));
+
     }
 
     [HttpGet("global/")]

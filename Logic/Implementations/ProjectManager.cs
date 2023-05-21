@@ -18,7 +18,7 @@ public class ProjectManager: IProjectManager
 
     public async Task<Application> CreateApplication(Institution institution)
     {
-        var application = new Application { Institution = institution, IsReviewed = false, ApplicationResult = false};
+        var application = new Application { InstitutionId = institution.Id, IsReviewed = false, ApplicationResult = false};
         await _repository.Applications.AddAsync(application);
         await _repository.SaveChangesAsync();
         return application;
@@ -28,6 +28,7 @@ public class ProjectManager: IProjectManager
     {
         return _repository.Applications
             .Where(a => !a.IsReviewed)
+            .Include(a => a.Institution)
             .AsEnumerable();
     }
 

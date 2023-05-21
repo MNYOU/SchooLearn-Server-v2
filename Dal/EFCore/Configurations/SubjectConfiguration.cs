@@ -21,11 +21,7 @@ public class SubjectConfiguration : IEntityTypeConfiguration<Subject>
 
         builder
             .Property(s => s.Description)
+            .IsRequired(false)
             .HasColumnName("description");
-
-        builder
-            .HasOne(s => s.Teacher)
-            .WithMany(t => t.Subjects)
-            .HasForeignKey(s => s.TeacherId);
     }
 }

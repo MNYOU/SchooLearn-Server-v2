@@ -1,8 +1,7 @@
-﻿using System.Security.Claims;
-using Dal.Enums;
+﻿using Dal.Enums;
+using Logic.ApiModels;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
@@ -28,10 +27,21 @@ public class StudentController : ControllerBase
         return Ok(groups);
     }
 
-    [HttpPost("group/{groupId:long}/create-application")]
-    public async Task<IActionResult> CreateApplicationToGroupAsync([FromRoute] long groupId, [FromQuery] long invitationCode)
+    [HttpGet("groups/{groupId:long}")]
+    public IActionResult GetTeacherOfGroup([FromRoute] long groupId)
     {
-        var result = await _manager.CreateApplicationToGroup(Id, groupId, invitationCode);
+        var teacherName = _manager.GetTeacherName(Id, groupId);
+        return teacherName != null 
+            ? Ok(teacherName) 
+            : BadRequest();
+    }
+
+
+    [HttpPost("group/{groupId:long}/create-application")]
+    public async Task<IActionResult> CreateApplicationToGroupAsync([FromRoute] long groupId,
+        [FromQuery] string invitationCode, [FromServices] ITeacherManager teacherManager)
+    {
+        var result = await _manager.CreateApplicationToGroup(Id, groupId, invitationCode, teacherManager);
         return result ? Ok() : BadRequest();
     }
 

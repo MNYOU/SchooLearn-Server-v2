@@ -5,7 +5,7 @@ namespace Logic.Interfaces;
 
 public interface ITeacherManager
 {
-    Task<bool> Register(long userId, long invitationCode);
+    Task<bool> Register(long userId, string invitationCode, IAccountManager accountManager);
 
     Teacher? Get(long id);
     
@@ -17,9 +17,9 @@ public interface ITeacherManager
     
     IEnumerable<Group> GetMyGroups(long teacherId);
     
-    IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId);
+    IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId, long? subjectId);
 
-    Task<bool> CreateGroup(long teacherId, GroupApiModel model);
+    Task<bool> CreateGroup(long teacherId, long subjectId, GroupApiModel model);
 
     Task<bool> DisbandGroup(long teacherId, long groupId);
 
@@ -29,11 +29,10 @@ public interface ITeacherManager
 
     bool ConsiderApplication(long teacherId, long groupId, long studentId, bool isApproved);
 
-    Task<long?> GetGroupInvitationCodeAsync(long teacherId, long groupId);
+    Task<string?> GetGroupInvitationCodeAsync(long teacherId, long groupId);
 
     bool GenerateNewInvitationCode(long teacherId, long groupId);
 
-    IEnumerable<SubjectApiModel> GetMySubjects(long teacherId);
-
+    [Obsolete]
     Task<bool> AddSubject(long teacherId, SubjectApiModel model);
 }

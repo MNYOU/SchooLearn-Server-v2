@@ -13,7 +13,9 @@ public interface IAccountManager
 
     Task<User?> GetWithDetailsAsync(long id);
 
+    void Update(User user);
+
     Task<bool> Register(RegistrationApiModel model);
 
-    AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model);
+    AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model, IInstitutionManager institutionManager);
 }

@@ -5,7 +5,7 @@ namespace Logic.Interfaces;
 
 public interface IStudentManager
 {
-    Task<bool> Register(long userId);
+    Task<bool> Register(long userId, IAccountManager accountManager);
 
     Student? Get(long id);
 
@@ -15,13 +15,15 @@ public interface IStudentManager
     
     Task<Student?> GetWithDetailsAsync(long id);
 
-    IEnumerable<StudentApiModel>? SearchByNickname(long userId, long institutionId, string nickname);
+    IEnumerable<StudentApiModel>? SearchByNickname(long userId, long? institutionId, string nickname, IAccountManager accountManager);
 
-    IEnumerable<StudentApiModel>? GetAllByInstitution(long userId, long institutionId);
+    IEnumerable<StudentApiModel>? GetAllByInstitution(long userId, long institutionId, IAccountManager accountManager);
 
     IEnumerable<GroupApiModel> GetMyGroups(long studentId);
 
-    Task<bool> CreateApplicationToGroup(long studentId, long groupId, long invitationCode);
+    string? GetTeacherName(long studentId, long groupId);
+
+    Task<bool> CreateApplicationToGroup(long studentId, long groupId, string invitationCode, ITeacherManager teacherManager);
 
     Task<bool> LeaveGroupAsync(long studentId, long groupId);
 }

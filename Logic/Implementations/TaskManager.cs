@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Dal.Entities;
+using Dal.Enums;
 using Dal.Repositories;
 using Logic.ApiModels;
+using Logic.Helpers;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -37,48 +39,87 @@ public class TaskManager : ITaskManager
         return _repository.Tasks
             .Include(t => t.Subject)
             .Include(t => t.Difficulty)
+            .Include(t => t.Institution)
             .Include(t => t.Groups)
             .FirstOrDefault(t => t.Id == id);
     }
 
-    public TaskResponseModel? GetAny(long institutionId, string? subjectName, string? difficultyName)
+    public TaskResponseModel? GetForResponse(long id)
     {
+        return _mapper.Map<TaskResponseModel>(Get(id));
+    }
+
+    public TaskResponseModel? GetAny(long userId, long? subjectId, long? difficultyId, IAccountManager accountManager)
+    {
+        var user = accountManager.Get(userId);
+        if (user is null) return null;
         var tasks = _repository.Tasks
-            .Where(t => t.IsPublic && !t.IsExtended && t.InstitutionId == institutionId);
-        if (subjectName != null)
+            .Where(t => t.IsPublic && !t.IsExtended && t.InstitutionId == user.InstitutionId);
+        if (subjectId != null)
         {
             tasks = tasks
-                .Where(t => t.Subject.Name == subjectName);
+                .Where(t => t.SubjectId == subjectId);
         }
 
-        if (difficultyName != null)
+        if (difficultyId != null)
         {
             tasks = tasks
-                .Where(t => t.Difficulty.Name == difficultyName);
+                .Where(t => t.DifficultyId == difficultyId);
         }
 
         return _mapper.Map<TaskResponseModel>(tasks
             .OrderBy(t => _random.Next(int.MaxValue))
+            .Include(t => t.Difficulty)
+            .Include(t => t.Subject)
             .FirstOrDefault());
     }
 
-    public async Task<IEnumerable<TaskResponseModel>> GetCurrentForStudentAsync(long studentId)
+    public TaskResponseModel? GetForStudent(long studentId, long taskId)
     {
-        var student = await _studentManager.GetAsync(studentId);
-        if (student is null)
-            return Array.Empty<TaskResponseModel>();
+        var student = _studentManager.Get(studentId);
+        var task = GetForResponse(taskId);
+        if (student is null || task is null) return null;
+        if (student.InstitutionId == task.Institution.Id)
+            return task;
+        return null;
+    }
+
+    public TaskResponseModel? GetForTeacher(long teacherId, long taskId)
+    {
+        var teacher = _teacherManager.Get(teacherId);
+        var task = GetForResponse(taskId);
+        if (teacher is null || task is null) return null;
+        if (teacher.InstitutionId == task.Institution.Id)
+            return task;
+        return null;
+    }
+
+    public IEnumerable<SubjectApiModel> GetSubjects()
+    {
+        return _subjectRepository.Subjects
+            .Select(s => _mapper.Map<SubjectApiModel>(s));
+    }
+
+    public IEnumerable<Difficulty> GetAvailableDifficulties()
+    {
+        return _repository.Difficulties;
+    }
+
+    public async Task<IEnumerable<TaskPreviewApiModel>> GetCurrentForStudentAsync(long studentId, long? groupId)
+    {
+        if (!_groupRepository.GroupStudents.Any(gs =>
+                gs.GroupId == groupId && gs.StudentId == studentId && gs.IsApproved))
+            return Array.Empty<TaskPreviewApiModel>();
         var solvedTasks = _repository.SolvedTasks
             .Where(st => st.StudentId == studentId)
             .Select(t => t.Task);
-        return _groupRepository.GroupStudents
-            .Where(gs => gs.StudentId == studentId && gs.IsApproved)
-            .SelectMany(gs => gs.Group.Tasks)
-            .Where(t => !IsExpired(t) && !solvedTasks.Contains(t))
+        return _repository.Tasks
+            .Where(t => t.Groups.Any(g => g.Id == groupId) && !solvedTasks.Any(st => st.Id == t.Id))
             .Include(t => t.Difficulty)
-            .Include(t => t.Difficulty)
+            .Include(t => t.Subject)
             .OrderBy(t => t.CreationDateTime)
             .Take(20)
-            .Select(t => _mapper.Map<TaskResponseModel>(t));
+            .Select(t => _mapper.Map<TaskPreviewApiModel>(t));
     }
 
     public async Task<IEnumerable<TaskResponseModel>> GetExpiredTasksAsync(long studentId, DateTime? period)
@@ -98,32 +139,34 @@ public class TaskManager : ITaskManager
             .Select(t => _mapper.Map<TaskResponseModel>(t));
     }
 
-    public async Task<IEnumerable<TaskFullApiModel>> GetAssignedTasksAsync(long teacherId, DateTime? period)
+    public async Task<IEnumerable<TaskPreviewApiModel>> GetAssignedTasksAsync(long teacherId, long? groupId,
+        DateTime? period)
     {
         period ??= DateTime.MinValue;
         var teacher = await _teacherManager.GetWithDetailsAsync(teacherId);
         if (teacher is null)
-            return Array.Empty<TaskFullApiModel>();
+            return Array.Empty<TaskPreviewApiModel>();
         return _repository.Tasks
-            .Where(t => t.TeacherId == teacherId && !IsExpired(t) && t.Deadline >= period.Value)
+            .Where(t => t.TeacherId == teacherId && (groupId == null || t.Groups.Any(g => g.Id == groupId)) &&
+                        !IsExpired(t) && t.Deadline >= period.Value)
             .OrderBy(t => t.CreationDateTime)
             .Include(t => t.Difficulty)
             .Include(t => t.Subject)
-            .Select(t => _mapper.Map<TaskFullApiModel>(t));
+            .Select(t => _mapper.Map<TaskPreviewApiModel>(t));
     }
 
-    public async Task<IEnumerable<TaskFullApiModel>> GetOutdatedTasksAsync(long teacherId, DateTime? period)
+    public async Task<IEnumerable<TaskResponseModel>> GetOutdatedTasksAsync(long teacherId, DateTime? period)
     {
         var teacher = await _teacherManager.GetAsync(teacherId);
         if (teacher is null)
-            return Array.Empty<TaskFullApiModel>();
+            return Array.Empty<TaskResponseModel>();
         period ??= DateTime.Now.AddMonths(-1);
         return _repository.Tasks
             .Where(t => t.TeacherId == teacherId && !IsExpired(t, period.Value))
             .OrderBy(t => t.Deadline)
             .Include(t => t.Difficulty)
             .Include(t => t.Subject)
-            .Select(t => _mapper.Map<TaskFullApiModel>(t));
+            .Select(t => _mapper.Map<TaskResponseModel>(t));
     }
 
     public IEnumerable<StudentApiModel> GetStudentsWhoCompletedTask(long teacherId, long taskId)
@@ -139,27 +182,40 @@ public class TaskManager : ITaskManager
             .Select(t => new StudentApiModel());
     }
 
-    public IEnumerable<TaskPreviewApiModel> GetSolvedTasksPreviewAsync(long studentId)
+    public int GetCountOfSolved(long studentId, long groupId)
     {
-        // TODO нужно создать карту для TaskPreviewApiModel, которая будет вытягивать Scores из сложности
+        return _repository.SolvedTasks
+            .Count(st => st.StudentId == studentId && st.Task.Groups.Any(g => g.Id == groupId) &&
+                         st.Student.GroupsStudent.Any(gs =>
+                             gs.IsApproved &&
+                             gs.GroupId == groupId));
+    }
+
+    public IEnumerable<SolvedTaskPreviewModel> GetSolvedTasksPreviewAsync(long studentId, long? groupId)
+    {
+        if (!_groupRepository.GroupStudents.Any(gs =>
+                gs.GroupId == groupId && gs.StudentId == studentId && gs.IsApproved))
+            return Array.Empty<SolvedTaskPreviewModel>();
         var tasks = _repository.SolvedTasks
-            .Where(st => st.StudentId == studentId && st.IsChecked == true && !st.Task.IsExtended)
+            .Where(st => st.StudentId == studentId && st.IsChecked == true && !st.Task.IsExtended &&
+                         (groupId == null || st.Task.Groups.Any(g => g.Id == groupId)))
             .OrderBy(st => st.SolveTime)
             .Include(st => st.Task)
             .ThenInclude(t => t.Difficulty)
-            .Select(st => _mapper.Map<TaskPreviewApiModel>(st.Task));
+            .Select(st => ConvertHelper.ConvertToPreview(st));
         return tasks;
     }
 
     public SolvedTaskApiModel? GetSolvedTask(long studentId, long taskId)
     {
-        // TODO нужно создать карту для SolvedTaskApiModel, которая будет вытягивать Scores из сложности
+        // TODO ошибка
         var solvedTask = _repository.SolvedTasks
             .Include(st => st.Task)
             .Include(st => st.Task.Subject)
             .Include(st => st.Task.Difficulty)
             .FirstOrDefault(st => st.StudentId == studentId && st.TaskId == taskId);
-        return _mapper.Map<SolvedTaskApiModel>(solvedTask);
+        if (solvedTask is null) return null;
+        return ConvertHelper.ConvertToSolved(solvedTask);
     }
 
     private async Task<Task?> MapTaskAsync(TaskApiModel model, long institutionId, long teacherId)
@@ -248,32 +304,38 @@ public class TaskManager : ITaskManager
 
     public bool CheckAndPointTask(TaskWithAnswerRequest model, long studentId)
     {
+        if (!CanStudentSolveTask(studentId, model.TaskId)) return false;
         var task = _repository.Tasks
             .Include(t => t.Difficulty)
             .FirstOrDefault(t => t.Id == model.TaskId);
-        if (task is null || IsExpired(task) || task.IsExtended ||
-            _repository.SolvedTasks.Any(st => st.TaskId == model.TaskId && st.StudentId == studentId)) return false;
+        if (task is null || task.IsExtended) return false;
         var result = CheckAnswer(task, model.Answer);
         if (!result) return result;
-        var student = _studentManager.Get(studentId);
-        if (student is null) return result;
         var solvedTask = new SolvedTask
         {
             Answer = model.Answer,
             SolveTime = DateTime.Now,
-            Student = student,
+            StudentId = studentId,
             Task = task,
             Scores = task.Difficulty.Scores,
             IsChecked = true
         };
-        student.SolvedTasks.Add(solvedTask);
+        _repository.SolvedTasks.Add(solvedTask);
         _repository.SaveChanges();
         return result;
     }
 
-    public bool GetUnchecked(long teacherId)
+    public IEnumerable<SolvedExtendedTaskPreview> GetUnchecked(long teacherId, long? groupId)
     {
-        throw new NotImplementedException();
+        var students = _groupRepository.Groups
+            .Where(g => (groupId == null || g.Id == groupId) && g.TeacherId == teacherId)
+            .SelectMany(g => g.GroupsStudent)
+            .Where(gs => gs.IsApproved)
+            .Select(gs => gs.Student)
+            .Distinct();
+        return _repository.SolvedTasks
+            .Where(st => !st.IsChecked && st.Task.IsExtended && students.Any(s => s.UserId == st.StudentId))
+            .Select(st => new SolvedExtendedTaskPreview(st.StudentId, st.TaskId));
     }
 
 
@@ -294,53 +356,40 @@ public class TaskManager : ITaskManager
 
     public async Task<bool> UploadAnswerToTaskAsync(long studentId, long taskId, IFormFile fileAnswer)
     {
-        // TODO если в разных группах одинаковое задание
-        // проверять, что у ученика есть эта задача в выданных
-        return false;
-        // var solvedTask = await _repository.SolvedTasks
-        //     .FirstOrDefaultAsync(st => st.StudentId == studentId && st.TaskId == taskId);
-        // if (solvedTask != null) return false;
-        // var task = Get(taskId);
-        // // TODO задание должно приходить с группами
-        // if (task is null || !task.IsExtended || IsExpired(task)) return false;
-        // var student = await _studentManager.GetWithDetailsAsync(studentId);
-        // if (student is null) return false;
-        // var studentHasTask = student.GroupsStudent
-        //     .Where(gs => gs.IsApproved)
-        //     .SelectMany(gs => gs.Group.Tasks)
-        //     .Any(t => t.Id == taskId);
-        // var bytes = await GetByteArrayFromFileAsync(fileAnswer);
-        // solvedTask = new SolvedTask
-        // {
-        //     StudentId = student.UserId,
-        //     TaskId = task.Id,
-        //     SolveTime = DateTime.Now,
-        //     FileAnswer = new FileData()
-        //     {
-        //         Content = bytes,
-        //         FileName = ".pdf",
-        //         ContentType = "application/pdf",
-        //     },
-        // };
-        // task.SolvedTasks.Add(solvedTask);
-        // await _repository.SaveChangesAsync();
-        // return true;
+        if (!CanStudentSolveTask(studentId, taskId)) return false;
+        var task = Get(taskId);
+        if (task is null || !task.IsExtended) return false;
+        var bytes = await GetByteArrayFromFileAsync(fileAnswer);
+        var solvedTask = new SolvedTask
+        {
+            StudentId = studentId,
+            TaskId = taskId,
+            SolveTime = DateTime.Now,
+            FileAnswer = new FileData()
+            {
+                Content = bytes,
+                FileName = ".pdf",
+                ContentType = "application/pdf",
+            },
+        };
+        task.SolvedTasks.Add(solvedTask);
+        await _repository.SaveChangesAsync();
+        return true;
     }
 
     private bool CanStudentSolveTask(long studentId, long taskId)
     {
-        return false;
-        // // если задание решено успешно, его больше нельзя решать
-        // // а если он получил не макс балл за расширенное задание, то?
-        // var task = _studentManager.Get(studentId)?.GroupsStudent
-        //     .Where(gs => gs.IsApproved)
-        //     .SelectMany(gs => gs.Group.Tasks)
-        //     .FirstOrDefault(t => t.Id == taskId);
-        // if ()
-        // var solvedTasks = _repository.SolvedTasks
-        //     .Where(st => st.StudentId == studentId)
-        //     .Select(st => st.Task);
-        // return false;
+        var student = _studentManager.GetWithDetails(studentId);
+        var task = Get(taskId);
+        if (task is null || IsExpired(task) || student is null ||
+            student.InstitutionId != task.InstitutionId) return false;
+        if (_repository.SolvedTasks.Any(st => st.TaskId == taskId && st.StudentId == studentId)) return false;
+        if (task is { IsPublic: true, IsExtended: false }) return true;
+        var groupsContainsTask = _groupRepository.GroupStudents
+            .Where(gs => gs.IsApproved && gs.StudentId == studentId)
+            .SelectMany(gs => gs.Group.Tasks)
+            .Any(t => t.Id == taskId);
+        return groupsContainsTask;
     }
 
     public FileAnswer? DownloadAnswer(long studentId, long taskId)
@@ -380,7 +429,7 @@ public class TaskManager : ITaskManager
 
     public static bool CheckTaskForCorrectness(Task task)
     {
-        //TODO здесь можно сравнивать теоритический ответ и ответ, полученный от chatGPT
+        // здесь можно сравнивать теоритический ответ и ответ, полученный от chatGPT
         if (task is { IsExtended: false, Answer: null or "" })
             return false;
         return true;

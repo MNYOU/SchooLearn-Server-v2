@@ -35,5 +35,10 @@ public class InstitutionConfiguration : IEntityTypeConfiguration<Institution>
         builder
             .Property(i => i.PrimaryInvitationCode)
             .HasColumnName("primary_invitation_code");
+        
+        // builder
+        //     .HasOne(i => i.Admin)
+        //     .WithOne(a => a.Institution)
+        //     .HasForeignKey<Institution>(i => i.AdminId);
     }
 }

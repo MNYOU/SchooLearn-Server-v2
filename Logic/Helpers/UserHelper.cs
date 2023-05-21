@@ -5,8 +5,10 @@ namespace Logic.Helpers;
 
 public static class UserHelper
 {
-    public static bool HasAccessToUsers(User user, long institutionId, Role role)
+    public static bool HasAccessToUsers(User user, long? institutionId, Role role)
     {
+        if (institutionId is null && user.Role != Role.Admin && user.Role !=  Role.ProjectManager)
+            return false;
         var hasAccess = false;
         var roleWeight = (int)user.Role;
         switch (role)

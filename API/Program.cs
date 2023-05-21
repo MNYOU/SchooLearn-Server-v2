@@ -41,6 +41,18 @@ services.AddAuthentication(options =>
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:SecretKey"] ?? "123")),
         };
     });
+builder.Services.AddCors(options =>
+{
+    // options.AddDefaultPolicy();
+    options.AddPolicy(name: "MyAllowSpecificOrigins",
+        policy  =>
+        {
+            policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin();
+        });
+});
 services.AddDbContext<DataContext>(); // хотя ms используют разные контексты
 // services.AddIdentity<IdentityUser>();
 // services
@@ -93,9 +105,10 @@ else
 app.UseHttpsRedirection();
 
 app.UseRouting();
+app.UseCors("MyAllowSpecificOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
-
+// app.UseCors(builder => builder.AllowAnyOrigin());
 app.MapControllers();
 
 app.Run();

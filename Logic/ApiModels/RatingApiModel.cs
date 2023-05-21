@@ -2,7 +2,7 @@
 
 public class RatingApiModel
 {
-    public int Place { get; set; }
+    public long Place { get; set; }
     
     public StudentApiModel Student { get; set; }
 

@@ -21,6 +21,7 @@ public class AdministratorConfiguration : IEntityTypeConfiguration<Admin>
         builder
             .HasOne(a => a.Institution)
             .WithOne(i => i.Admin)
-            .HasForeignKey<Institution>(i => i.AdminId);
+            .HasForeignKey<Admin>(i => i.InstitutionId)
+            .IsRequired();
     }
 }

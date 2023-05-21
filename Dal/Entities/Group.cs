@@ -11,7 +11,7 @@ public class Group
 
     public string? Description { get; set; }
     
-    public long InvitationCode { get; set; }
+    public string InvitationCode { get; set; }
 
     public long TeacherId { get; set; }
     

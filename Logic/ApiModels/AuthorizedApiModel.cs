@@ -1,4 +1,6 @@
-﻿namespace Logic.ApiModels;
+﻿using Dal.Enums;
+
+namespace Logic.ApiModels;
 
 public record AuthorizedApiModel
 {
@@ -7,10 +9,12 @@ public record AuthorizedApiModel
     public string NickName { get; set; }
 
     public string Login { get; set; }
+    
+    public Role Role { get; set; }
 
-    public string Institution { get; set; } // только название?
+    public InstitutionApiModel? Institution { get; set; }
 
     public string Token { get; set; }
 
     public long LifeTime { get; set; }
-};
+}

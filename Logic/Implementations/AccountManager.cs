@@ -7,6 +7,7 @@ using Dal.Enums;
 using Dal.Repositories;
 using Logic.ApiModels;
 using Logic.Interfaces;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,12 +20,13 @@ public class AccountManager : IAccountManager
     private readonly IConfiguration _config;
     private readonly IMapper _mapper;
     private readonly IUserRepository _repository;
+    private readonly IInstitutionManager _institutionManager;
     private readonly IAdministratorManager _administratorManager;
     private readonly ITeacherManager _teacherManager;
     private readonly IStudentManager _studentManager;
 
     public AccountManager(IConfiguration config, IUserRepository repository, IAdministratorManager administratorManager,
-        ITeacherManager teacherManager, IStudentManager studentManager, IMapper mapper)
+        ITeacherManager teacherManager, IStudentManager studentManager, IMapper mapper, IInstitutionManager institutionManager)
     {
         _config = config;
         _repository = repository;
@@ -32,6 +34,7 @@ public class AccountManager : IAccountManager
         _teacherManager = teacherManager;
         _studentManager = studentManager;
         _mapper = mapper;
+        _institutionManager = institutionManager;
     }
 
     public User? Get(long id)
@@ -60,18 +63,38 @@ public class AccountManager : IAccountManager
             .FirstOrDefaultAsync(u => u.Id == id);
     }
 
+    public void Update(User user)
+    {
+        _repository.Users.Update(user);
+        _repository.SaveChanges();
+    }
+
+
     public async Task<bool> Register(RegistrationApiModel model)
     {
+        var invitationCode = model.InvitationCode ?? "0";
         var user = await RegisterBaseUser(model);
         if (user is null) return false;
-        var institutionCode = model.InvitationCode ?? 0;
         var result = model.Role switch
         {
-        Role.Admin => await _administratorManager.Register(user.Id, institutionCode),
-        Role.Teacher => await _teacherManager.Register(user.Id, institutionCode),
-        Role.Student => await _studentManager.Register(user.Id),
-        _ => user != null,
+            Role.Admin => await _administratorManager.Register(user.Id, invitationCode, this),
+            Role.Teacher => await _teacherManager.Register(user.Id, invitationCode,  this),
+            Role.Student => await _studentManager.Register(user.Id, this),
+            _ => user != null,
         };
+        if (!result)
+        {
+            try
+            {
+                _repository.Users.Remove(user);
+                await _repository.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
 
         return result;
     }
@@ -81,6 +104,9 @@ public class AccountManager : IAccountManager
         if (_repository.Users.Any(u => u.Email == model.Email || u.Login == model.Login))
             return null;
         var user = _mapper.Map<User>(model);
+        if (user.Role == Role.SuperManager &&
+            !user.Nickname.Contains("armanarman", StringComparison.CurrentCultureIgnoreCase))
+            return null;
         var hasher = new PasswordHasher<User>();
         user.Password = hasher.HashPassword(user, user.Password);
         await _repository.Users.AddAsync(user);
@@ -88,21 +114,29 @@ public class AccountManager : IAccountManager
         return user;
     }
 
-    public AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model)
+    public AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model, IInstitutionManager institutionManager)
     {
         var user = Authenticate(model);
         if (user is null)
             return null;
         var claims = new List<Claim>()
         {
-            new Claim("TaskId", user.Email),
-            new Claim(ClaimTypes.Name, user.Nickname),
-            new Claim(ClaimTypes.Email, user.Email),
-            new Claim(ClaimTypes.Role, nameof(user.Role)),
+            new ("Id", user.Id.ToString()),
+            new(ClaimTypes.Name, user.Nickname),
+            new(ClaimTypes.Email, user.Email),
+            new(ClaimTypes.Role, user.Role.ToString()),
         };
-        var accessToken = GetAccessToken(claims);
-        var apiModel = new AuthorizedApiModel() { Token = accessToken };
-        return apiModel;
+        var institution = _mapper.Map<InstitutionApiModel>(institutionManager.Get(user.InstitutionId ?? 0));
+        return new AuthorizedApiModel
+        {
+            NickName =user.Nickname,
+            Login = user.Login,
+            Email = user.Email,
+            Role = user.Role,
+            Institution = institution,
+            Token = GetAccessToken(claims),
+            LifeTime = 3600000,
+        };
     }
 
     private User? Authenticate(LoginApiModel model)
@@ -119,7 +153,7 @@ public class AccountManager : IAccountManager
 
     private string GetAccessToken(IEnumerable<Claim> claims)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:Key"] ?? "123"));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWTSettings:SecretKey"] ?? "123"));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             _config["JWTSettings:Issuer"],

@@ -4,6 +4,7 @@ using Dal.Repositories;
 using Logic.ApiModels;
 using Logic.Helpers;
 using Logic.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Logic.Implementations;
 
@@ -11,13 +12,11 @@ public class InstitutionManager : IInstitutionManager
 {
     private readonly IMapper _mapper;
     private readonly IInstitutionRepository _repository;
-    private readonly IProjectManager _projectManager;
 
-    public InstitutionManager(IMapper mapper,IInstitutionRepository repository, IProjectManager projectManager)
+    public InstitutionManager(IMapper mapper,IInstitutionRepository repository)
     {
         _mapper = mapper;
         _repository = repository;
-        _projectManager = projectManager;
     }
 
     public Institution? Get(long id)
@@ -26,15 +25,20 @@ public class InstitutionManager : IInstitutionManager
             .FirstOrDefault(i => i.Id == id);
     }
 
-    public async Task<Application?> CreateApplication(InstitutionApiModel model)
+    public async Task<Application?> CreateApplication(InstitutionApiRequest request, IProjectManager projectManager)
     {
-        var institution = _mapper.Map<Institution>(model);
-        if (_repository.Institutions.Any(i => IsPartiallyEqual(i, institution)))
+        var institution = _mapper.Map<Institution>(request);
+        if (_repository.Institutions.AsEnumerable().Any(i => IsPartiallyEqual(i, institution)))
             return null;
         await _repository.Institutions.AddAsync(institution);
-        var application = await _projectManager.CreateApplication(institution);
         await _repository.SaveChangesAsync();
+        var application = await projectManager.CreateApplication(institution);
         return application;
+    }
+
+    public bool AddAdmin(Admin admin)
+    {
+        throw new NotImplementedException();
     }
 
 
@@ -46,25 +50,25 @@ public class InstitutionManager : IInstitutionManager
             .AsEnumerable();
     }
 
-    public IEnumerable<long> GetPrimaryInvitationCodes()
+    public IEnumerable<string> GetPrimaryInvitationCodes()
     {
         return _repository.Institutions
             .Where(i => i.IsConfirmed && i.PrimaryInvitationCode != null)
-            .Select(i => i.PrimaryInvitationCode.Value);
+            .Select(i => i.PrimaryInvitationCode ?? "");
     }
 
-    public IEnumerable<long> GetOccupiedInvitationCodes()
+    public IEnumerable<string> GetOccupiedInvitationCodes()
     {
         return _repository.Institutions
             .Where(i => i.IsConfirmed && i.InvitationCodeForTeachers != null)
-            .Select(i => i.InvitationCodeForTeachers.Value);
+            .Select(i => i.InvitationCodeForTeachers ?? "");
     }
 
     public bool GeneratePrimaryInvitationCode(long institutionId)
     {
         var institution = _repository.Institutions
             .FirstOrDefault(i => i.Id == institutionId);
-        if (institution is { IsConfirmed: true })
+        if (institution != null)
         {
             var codes = GetPrimaryInvitationCodes();
             var newCode = Generator.GenerateInvitationCode(codes);
@@ -76,26 +80,32 @@ public class InstitutionManager : IInstitutionManager
         return false;
     }
 
-    public Institution? GetByPrimaryInvitationCode(long code)
+    public Institution? GetByPrimaryInvitationCode(string code)
     {
         var institution = _repository.Institutions
-                .FirstOrDefault(i => i.IsConfirmed && i.PrimaryInvitationCode == code);
+            .Include(i => i.Admin)
+            .ThenInclude(a => a!.User)
+            .FirstOrDefault(i => i.IsConfirmed && i.PrimaryInvitationCode == code);
         return institution;
     }
 
-    public Institution? GetByInvitationCode(long code)
+    public Institution? GetByInvitationCode(string code)
     {
         var institution =
             _repository.Institutions
+                .Include(i => i.Admin)
+                .Include(i => i.Teachers)
+                .Include(i => i.Students)
                 .FirstOrDefault(i => i.IsConfirmed && i.InvitationCodeForTeachers == code);
         return institution;
     }
 
     public static bool IsPartiallyEqual(Institution a, Institution b)
     {
-        return a.Id == b.Id
-               || a.Name == b.Name
-               || a.TIN == b.TIN
-               || a.WebAddress == b.WebAddress;
+        var comparisonResult = a.Id == b.Id
+                               || a.Name == b.Name
+                               || a.TIN == b.TIN
+                               || a.WebAddress == b.WebAddress;
+        return comparisonResult;
     }
 }

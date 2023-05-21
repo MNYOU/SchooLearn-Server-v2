@@ -10,15 +10,12 @@ namespace Logic.Implementations;
 public class AdministratorManager : IAdministratorManager
 {
     private readonly IAdministratorRepository _repository;
-    private readonly IAccountManager _accountManager;
     private readonly IInstitutionManager _institutionManager;
 
-    public AdministratorManager(IAdministratorRepository repository, IInstitutionManager institutionManager,
-        IAccountManager accountManager)
+    public AdministratorManager(IAdministratorRepository repository, IInstitutionManager institutionManager)
     {
         _repository = repository;
         _institutionManager = institutionManager;
-        _accountManager = accountManager;
     }
 
     public Admin? Get(long id)
@@ -36,28 +33,37 @@ public class AdministratorManager : IAdministratorManager
             .FirstOrDefault(a => a.UserId == id);
     }
 
-    public async Task<bool> Register(long userId, long invitationCode)
+    public async Task<bool> Register(long userId, string invitationCode, IAccountManager accountManager)
     {
-        var user = await _accountManager.GetAsync(userId);
-        if (user is null || user.Role != Role.Admin ||
-            _repository.Admins.Any(a => a.UserId == user.Id))
+        var user = await accountManager.GetWithDetailsAsync(userId);
+        if (user is null || user.Role != Role.Admin || _repository.Admins.Any(a => a.UserId == user.Id))
             return false;
         var institution = _institutionManager.GetByPrimaryInvitationCode(invitationCode);
-        if (institution is null || institution.AdminId != null)
+        if (institution is null || institution.Admin != null)
             return false;
-        user.Institution = institution;
+        user.InstitutionId = institution.Id;
         var admin = new Admin
         {
-            User = user,
-            Institution = institution
+            UserId = user.Id,
+            InstitutionId = institution.Id
         };
-        await _repository.Admins.AddAsync(admin);
-        await _repository.SaveChangesAsync();
+        try
+        {
+            accountManager.Update(user);
+            await _repository.Admins.AddAsync(admin);
+            await _repository.SaveChangesAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
+
         GenerateNewInvitationCode(admin.UserId);
         return true;
     }
 
-    public long? GetInvitationCode(long adminId)
+    public string? GetInvitationCode(long adminId)
     {
         var admin = _repository.Admins
             .Include(a => a.User)

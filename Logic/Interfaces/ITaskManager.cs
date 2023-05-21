@@ -8,25 +8,37 @@ namespace Logic.Interfaces;
 public interface ITaskManager
 {
     Task? Get(long id);
+
+    TaskResponseModel? GetForResponse(long id);
+
+    TaskResponseModel? GetAny(long userId, long? subjectId, long? difficultyId, IAccountManager accountManager);
+
+    TaskResponseModel? GetForStudent(long studentId, long taskId);
+
+    TaskResponseModel? GetForTeacher(long teacherId, long taskId);
     
-    TaskResponseModel? GetAny(long institutionId, string? subjectName, string? difficultyName);
+    IEnumerable<SubjectApiModel> GetSubjects();
+
+    IEnumerable<Difficulty> GetAvailableDifficulties();
 
     /// <summary>
     /// Возвращает невыполненные задания для студента
     /// </summary>
     /// <param name="studentId">Идентификатор студента</param>
     /// <returns>Перечисление заданий</returns>
-    Task<IEnumerable<TaskResponseModel>> GetCurrentForStudentAsync(long studentId);
+    Task<IEnumerable<TaskPreviewApiModel>> GetCurrentForStudentAsync(long studentId, long? groupId);
     
     Task<IEnumerable<TaskResponseModel>> GetExpiredTasksAsync(long studentId, DateTime? period);
 
-    Task<IEnumerable<TaskFullApiModel>> GetAssignedTasksAsync(long teacherId, DateTime? period);
+    Task<IEnumerable<TaskPreviewApiModel>> GetAssignedTasksAsync(long teacherId, long? groupId, DateTime? period);
 
-    Task<IEnumerable<TaskFullApiModel>> GetOutdatedTasksAsync(long teacherId, DateTime? period);
+    Task<IEnumerable<TaskResponseModel>> GetOutdatedTasksAsync(long teacherId, DateTime? period);
     
     IEnumerable<StudentApiModel> GetStudentsWhoCompletedTask(long teacherId, long taskId);
 
-    IEnumerable<TaskPreviewApiModel> GetSolvedTasksPreviewAsync(long studentId);
+    int GetCountOfSolved(long studentId, long groupId);
+
+    IEnumerable<SolvedTaskPreviewModel> GetSolvedTasksPreviewAsync(long studentId, long? groupId);
 
     SolvedTaskApiModel? GetSolvedTask(long studentId, long taskId);
 
@@ -55,7 +67,7 @@ public interface ITaskManager
     /// <returns>Результат проверки ответа</returns>
     bool CheckAndPointTask(TaskWithAnswerRequest model, long studentId);
 
-    bool GetUnchecked(long teacherId);
+    IEnumerable<SolvedExtendedTaskPreview> GetUnchecked(long teacherId, long? groupId);
 
     /// <summary>
     /// Ставит оценку ученику после проверки учителем

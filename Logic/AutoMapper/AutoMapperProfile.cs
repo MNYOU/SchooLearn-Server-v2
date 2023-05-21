@@ -10,9 +10,9 @@ public class AutoMapperProfile: Profile
 {
     public AutoMapperProfile()
     {
-        CreateMap<InstitutionApiModel, Institution>().ReverseMap();
+        CreateMap<InstitutionApiRequest, Institution>().ReverseMap();
         CreateMap<TaskApiModel, Task>();
-        CreateMap<GroupApiModel, Group>();
+        CreateMap<GroupApiModel, Group>().ReverseMap();
         CreateMap<User, AuthorizedApiModel>();
         // CreateMap<RegistrationApiModel, RegistrationModel>();
         CreateMap<RegistrationApiModel, User>();
@@ -22,5 +22,10 @@ public class AutoMapperProfile: Profile
         // наверное нужно разделить task модели на респонсе и реквест
         // CreateMap<TaskCustomApiModel, TaskWithDetailedAnswer>();
         CreateMap<TaskApiModel, Task>();
+        
+        CreateMap<InstitutionApiRequest, Institution>();
+        CreateMap<Institution, InstitutionApiModel>();
+
+        CreateMap<Subject, SubjectApiModel>();
     }
 }

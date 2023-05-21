@@ -7,4 +7,5 @@ public enum Role: short
     Admin = 2,
     Teacher = 3,
     Student = 4,
+    Default = 5,
 }

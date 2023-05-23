@@ -23,7 +23,7 @@ public interface IStudentManager
 
     string? GetTeacherName(long studentId, long groupId);
 
-    Task<bool> CreateApplicationToGroup(long studentId, long groupId, string invitationCode, ITeacherManager teacherManager);
+    Task<bool> CreateApplicationToGroup(long studentId, string invitationCode, ITeacherManager teacherManager);
 
     Task<bool> LeaveGroupAsync(long studentId, long groupId);
 }

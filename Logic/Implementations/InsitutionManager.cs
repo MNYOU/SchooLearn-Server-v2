@@ -36,11 +36,6 @@ public class InstitutionManager : IInstitutionManager
         return application;
     }
 
-    public bool AddAdmin(Admin admin)
-    {
-        throw new NotImplementedException();
-    }
-
 
     public IEnumerable<InstitutionApiModel> GetAllConfirmed()
     {

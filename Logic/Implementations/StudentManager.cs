@@ -119,24 +119,24 @@ public class StudentManager : IStudentManager
     }
 
 
-    public async Task<bool> CreateApplicationToGroup(long studentId, long groupId, string invitationCode, ITeacherManager teacherManager)
+    public async Task<bool> CreateApplicationToGroup(long studentId, string invitationCode, ITeacherManager teacherManager)
     {
         var student = await _repository.Students
             .FirstOrDefaultAsync(s => s.UserId == studentId);
         var group = await _groupRepository.Groups
             .Include(g => g.Teacher)
-            .FirstOrDefaultAsync(g => g.Id == groupId && g.InvitationCode == invitationCode);
+            .FirstOrDefaultAsync(g => g.InvitationCode == invitationCode);
         if (student is null || group is null)
             return false;
         if (student.InstitutionId != null && student.InstitutionId != group.Teacher.InstitutionId ||
-            _groupRepository.GroupStudents.Any(gs => gs.StudentId == studentId || gs.GroupId == groupId))
+            _groupRepository.GroupStudents.Any(gs => gs.StudentId == studentId || gs.GroupId == group.Id))
             return false;
-        var groupStudent = new GroupStudent { StudentId = studentId, GroupId = groupId, IsApproved = false };
+        var groupStudent = new GroupStudent { StudentId = studentId, GroupId = group.Id, IsApproved = false };
         await _groupRepository.GroupStudents.AddAsync(groupStudent);
         await _groupRepository.SaveChangesAsync();
                 
-        // TODO заявки сразу утверждаются
-        teacherManager.ConsiderApplication(group.TeacherId, groupId, studentId, true);
+        // TODO заявки сразу утверждаются, то есть не требуют подтверждения
+        teacherManager.ConsiderApplication(group.TeacherId, group.Id, studentId, true);
         return true;
     }
 

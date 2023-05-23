@@ -201,14 +201,12 @@ public class TaskManager : ITaskManager
                          (groupId == null || st.Task.Groups.Any(g => g.Id == groupId)))
             .OrderBy(st => st.SolveTime)
             .Include(st => st.Task)
-            .ThenInclude(t => t.Difficulty)
             .Select(st => ConvertHelper.ConvertToPreview(st));
         return tasks;
     }
 
     public SolvedTaskApiModel? GetSolvedTask(long studentId, long taskId)
     {
-        // TODO ошибка
         var solvedTask = _repository.SolvedTasks
             .Include(st => st.Task)
             .Include(st => st.Task.Subject)

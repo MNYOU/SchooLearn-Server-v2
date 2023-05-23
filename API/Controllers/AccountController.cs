@@ -39,7 +39,7 @@ public class AccountController : ControllerBase
     [Authorize]
     public IActionResult RenameUser([FromQuery] string name)
     {
-        return Ok(true);
-        throw new NotImplementedException();
+        var result = _manager.Rename(Id, name);
+        return result ? Ok() : StatusCode(500);
     }
 }

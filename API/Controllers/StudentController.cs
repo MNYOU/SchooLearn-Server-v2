@@ -31,17 +31,17 @@ public class StudentController : ControllerBase
     public IActionResult GetTeacherOfGroup([FromRoute] long groupId)
     {
         var teacherName = _manager.GetTeacherName(Id, groupId);
-        return teacherName != null 
-            ? Ok(teacherName) 
+        return teacherName != null
+            ? Ok(teacherName)
             : BadRequest();
     }
 
 
-    [HttpPost("group/{groupId:long}/create-application")]
-    public async Task<IActionResult> CreateApplicationToGroupAsync([FromRoute] long groupId,
-        [FromQuery] string invitationCode, [FromServices] ITeacherManager teacherManager)
+    [HttpPost("group/create-application")]
+    public async Task<IActionResult> CreateApplicationToGroupAsync([FromQuery] string invitationCode,
+        [FromServices] ITeacherManager teacherManager)
     {
-        var result = await _manager.CreateApplicationToGroup(Id, groupId, invitationCode, teacherManager);
+        var result = await _manager.CreateApplicationToGroup(Id, invitationCode, teacherManager);
         return result ? Ok() : BadRequest();
     }
 

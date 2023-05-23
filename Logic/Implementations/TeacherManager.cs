@@ -177,7 +177,6 @@ public class TeacherManager : ITeacherManager
 
     public bool ConsiderApplication(long teacherId, long groupId, long studentId, bool isApproved)
     {
-        // TODO сейчас заявки автоматические
         if (!TeacherIsCreatorOfGroup(teacherId, groupId)) return false;
         var groupStudents = _groupRepository.GroupStudents
             .Include(gs => gs.Group)

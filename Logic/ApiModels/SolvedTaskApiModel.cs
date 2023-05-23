@@ -22,5 +22,5 @@ public class SolvedTaskApiModel
     
     public DateTime CreationDateTime { get; set; }
     
-    public long Scores { get; set; }
+    public float Scores { get; set; }
 }

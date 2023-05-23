@@ -10,8 +10,6 @@ public interface IInstitutionManager
     
     Task<Application?> CreateApplication(InstitutionApiRequest request, IProjectManager projectManager);
 
-    bool AddAdmin(Admin admin);
-
     IEnumerable<InstitutionApiModel> GetAllConfirmed();
 
     IEnumerable<string> GetPrimaryInvitationCodes();

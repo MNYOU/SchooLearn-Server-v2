@@ -30,10 +30,11 @@ public class RatingController : ControllerBase
     }
 
     [HttpGet("my/")]
-    public IActionResult GetMyRating()
+    public IActionResult GetMyRating([FromQuery] long? groupId, [FromQuery] long? subjectId,
+        [FromQuery] DateTime? from, [FromQuery] DateTime to)
     {
         if (UserRole != Role.Student) return StatusCode(403);
-        return Ok(_manager.GetMyRating(Id));
+        return Ok(_manager.GetMyRating(Id, subjectId, groupId, from, to));
 
     }
 
@@ -50,7 +51,7 @@ public class RatingController : ControllerBase
     public IActionResult Get([FromQuery] long? institutionId, [FromQuery] long? groupId, [FromQuery] long? subjectId,
         [FromQuery] DateTime? from, [FromQuery] DateTime to)
     {
-        var ratingApiModels = _manager.GetByCondition(Id, institutionId, groupId, subjectId, from, to);
+        var ratingApiModels = _manager.GetByCondition(Id, institutionId, subjectId, groupId, from, to);
         return ratingApiModels != null
             ? Ok(ratingApiModels)
             : BadRequest();

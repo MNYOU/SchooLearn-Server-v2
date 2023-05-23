@@ -15,6 +15,8 @@ public interface IAccountManager
 
     void Update(User user);
 
+    bool Rename(long id, string newName);
+
     Task<bool> Register(RegistrationApiModel model);
 
     AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model, IInstitutionManager institutionManager);

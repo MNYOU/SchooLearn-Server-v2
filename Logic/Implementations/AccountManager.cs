@@ -26,7 +26,8 @@ public class AccountManager : IAccountManager
     private readonly IStudentManager _studentManager;
 
     public AccountManager(IConfiguration config, IUserRepository repository, IAdministratorManager administratorManager,
-        ITeacherManager teacherManager, IStudentManager studentManager, IMapper mapper, IInstitutionManager institutionManager)
+        ITeacherManager teacherManager, IStudentManager studentManager, IMapper mapper,
+        IInstitutionManager institutionManager)
     {
         _config = config;
         _repository = repository;
@@ -69,6 +70,16 @@ public class AccountManager : IAccountManager
         _repository.SaveChanges();
     }
 
+    public bool Rename(long id, string newName)
+    {
+        if (!CanUseNickname(newName)) return false;
+        var user = Get(id);
+        if (user is null) return false;
+        user.Nickname = newName;
+        _repository.SaveChanges();
+        return true;
+    }
+
 
     public async Task<bool> Register(RegistrationApiModel model)
     {
@@ -78,7 +89,7 @@ public class AccountManager : IAccountManager
         var result = model.Role switch
         {
             Role.Admin => await _administratorManager.Register(user.Id, invitationCode, this),
-            Role.Teacher => await _teacherManager.Register(user.Id, invitationCode,  this),
+            Role.Teacher => await _teacherManager.Register(user.Id, invitationCode, this),
             Role.Student => await _studentManager.Register(user.Id, this),
             _ => user != null,
         };
@@ -101,7 +112,8 @@ public class AccountManager : IAccountManager
 
     private async Task<User?> RegisterBaseUser(RegistrationApiModel model)
     {
-        if (_repository.Users.Any(u => u.Email == model.Email || u.Login == model.Login))
+        if (_repository.Users.Any(u => u.Email == model.Email || u.Login == model.Login) ||
+            !CanUseNickname(model.Nickname))
             return null;
         var user = _mapper.Map<User>(model);
         if (user.Role == Role.SuperManager &&
@@ -114,6 +126,16 @@ public class AccountManager : IAccountManager
         return user;
     }
 
+    private bool CanUseNickname(string name)
+    {
+        if (name == "" || name.Split().Length == 0) return false;
+        if (_repository.Users.Any(u => u.Nickname == name)) return false;
+        return name
+            .Split()
+            .All(word => word
+                .All(char.IsLetterOrDigit));
+    }
+
     public AuthorizedApiModel? GetAuthorizedModel(LoginApiModel model, IInstitutionManager institutionManager)
     {
         var user = Authenticate(model);
@@ -121,7 +143,7 @@ public class AccountManager : IAccountManager
             return null;
         var claims = new List<Claim>()
         {
-            new ("Id", user.Id.ToString()),
+            new("Id", user.Id.ToString()),
             new(ClaimTypes.Name, user.Nickname),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, user.Role.ToString()),
@@ -129,7 +151,7 @@ public class AccountManager : IAccountManager
         var institution = _mapper.Map<InstitutionApiModel>(institutionManager.Get(user.InstitutionId ?? 0));
         return new AuthorizedApiModel
         {
-            NickName =user.Nickname,
+            NickName = user.Nickname,
             Login = user.Login,
             Email = user.Email,
             Role = user.Role,

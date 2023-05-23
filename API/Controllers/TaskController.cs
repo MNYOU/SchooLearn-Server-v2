@@ -99,18 +99,7 @@ public class TaskController : ControllerBase
     [HttpGet("solved/{taskId:long}")]
     public IActionResult GetSolvedTask([FromRoute] long taskId)
     {
-        // var task = _manager.GetSolvedTask(Id, taskId);
-        // TODO ff
-        var task = new SolvedTaskApiModel()
-        {
-            Id = 1,
-            CreationDateTime = DateTime.MinValue,
-            Deadline = DateTime.Now,
-            Description = "найти корень 5",
-            Difficulty = "легко",
-            Subject = "математика",
-            Scores = 3,
-        };
+        var task = _manager.GetSolvedTask(Id, taskId);
         if (task is null)
             return BadRequest();
         return Ok(task);
@@ -121,7 +110,6 @@ public class TaskController : ControllerBase
     [HttpGet("assigned/")]
     public async Task<IActionResult> GetAssignedAsync([FromQuery] long? groupId, [FromQuery] DateTime? period)
     {
-        // TODO
         var tasks = await _manager.GetAssignedTasksAsync(Id, groupId, period);
         return Ok(tasks);
     }
@@ -149,6 +137,8 @@ public class TaskController : ControllerBase
     {
         if (model is { IsExtended: false, Answer: null or "" })
             return BadRequest("Ответ не может быть null, если задание не является расширенным");
+        if (model.Deadline <= DateTime.Now)
+            return BadRequest();
         var result = false;
         if (groupId is null)
             result = await _manager.TryAddTaskInRepositoryAsync(Id, model);

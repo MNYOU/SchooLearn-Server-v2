@@ -10,40 +10,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f5f8bc2-d3ae-4e95-a34e-d3e2eef762b2" name="Changes" comment="">
+    <list default="true" id="4f5f8bc2-d3ae-4e95-a34e-d3e2eef762b2" name="Changes" comment="Реализовал Рейтинг">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Controllers/AccountController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/AccountController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Controllers/RatingController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/RatingController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Controllers/StudentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/StudentController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Controllers/TaskController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/API/Controllers/TaskController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/ref/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/ref/API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/refint/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/refint/API.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/RatingApiModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/ApiModels/RatingApiModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/ApiModels/SolvedTaskApiModel.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/ApiModels/SolvedTaskApiModel.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Helpers/ConvertHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Helpers/ConvertHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/AccountManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/AccountManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/InsitutionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/InsitutionManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/RatingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/RatingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IAccountManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IAccountManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IInstitutionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IInstitutionManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IRatingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IRatingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/Interfaces/IStudentManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Interfaces/IStudentManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/API/Properties/launchSettings.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,7 +50,9 @@
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e74356f198b598e97eaeea83e8b7b1f2bfe27c0a39fedf86bb7dc44827fbda/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Dal/EFCore/Configurations/FootballerConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Logic/AutoMapper/AutoMappingProfile.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/API/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/Controllers/TaskController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/API/bin/Debug/net7.0/publish/API.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Logic/ApiModels/RatingApiModel.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Logic/ApiModels/TaskResponseModel.cs" root0="FORCE_HIGHLIGHTING" />
@@ -280,6 +251,9 @@
       <workItem from="1684661815883" duration="6868000" />
       <workItem from="1684677648911" duration="620000" />
       <workItem from="1684678690002" duration="6076000" />
+      <workItem from="1684799142970" duration="894000" />
+      <workItem from="1684810049464" duration="308000" />
+      <workItem from="1684827842697" duration="3306000" />
     </task>
     <task id="LOCAL-00001" summary="start commit">
       <created>1679302567998</created>
@@ -358,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684645934829</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Реализовал Рейтинг">
+      <created>1684801552673</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1684801552673</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -429,7 +410,8 @@
     <MESSAGE value="implemented methods" />
     <MESSAGE value="Правки" />
     <MESSAGE value="Миграции" />
-    <option name="LAST_COMMIT_MESSAGE" value="Миграции" />
+    <MESSAGE value="Реализовал Рейтинг" />
+    <option name="LAST_COMMIT_MESSAGE" value="Реализовал Рейтинг" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

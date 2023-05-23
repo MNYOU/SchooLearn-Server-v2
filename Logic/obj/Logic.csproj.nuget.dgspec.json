@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Logic\\Logic.csproj": {}
+    "/root/www/SchooLearn-Server-v2/Logic/Logic.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj": {
+    "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj",
+        "projectUniqueName": "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj",
         "projectName": "Dal",
-        "projectPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj",
-        "packagesPath": "C:\\Users\\Арман\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\obj\\",
+        "projectPath": "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/root/www/SchooLearn-Server-v2/Dal/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Арман\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -81,21 +81,21 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Logic\\Logic.csproj": {
+    "/root/www/SchooLearn-Server-v2/Logic/Logic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Logic\\Logic.csproj",
+        "projectUniqueName": "/root/www/SchooLearn-Server-v2/Logic/Logic.csproj",
         "projectName": "Logic",
-        "projectPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Logic\\Logic.csproj",
-        "packagesPath": "C:\\Users\\Арман\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Logic\\obj\\",
+        "projectPath": "/root/www/SchooLearn-Server-v2/Logic/Logic.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/root/www/SchooLearn-Server-v2/Logic/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Арман\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net7.0"
@@ -107,8 +107,8 @@
           "net7.0": {
             "targetAlias": "net7.0",
             "projectReferences": {
-              "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj": {
-                "projectPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj"
+              "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj": {
+                "projectPath": "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj"
               }
             }
           }
@@ -168,7 +168,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
         }
       }
     }

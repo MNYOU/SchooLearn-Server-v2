@@ -19,8 +19,9 @@ public class AutoMapperProfile: Profile
         CreateMap<RegistrationApiModel, User>();
         CreateMap<Task, TaskPreviewApiModel>();
         CreateMap<Task, TaskResponseModel>()
-            .ForMember(t => t.Difficulty, opt => opt.MapFrom(d => d.Difficulty))
-            .ForPath(t => t.Difficulty.Tasks, d => d.Ignore());
+            // .AfterMap((s, d) => )
+            // .ForMember(t => t.Difficulty, opt => opt.MapFrom(d => d.Difficulty))
+            .ForPath(t => t.Difficulty.Tasks, opt => opt.Ignore());
             
         CreateMap<LoginApiModel, LoginModel>();
         // CreateMap<TaskApiModel, Task>();

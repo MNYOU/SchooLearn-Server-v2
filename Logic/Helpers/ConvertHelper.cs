@@ -57,4 +57,33 @@ public static class ConvertHelper
             SolvedTasks = new List<SolvedTask>(),
         };
     }
+
+    public static TaskResponseModel? ConvertTaskToResponse(Task? task)
+    {
+        if (task is null) return null;
+        var responseModel = new TaskResponseModel()
+        {
+            Id = task.Id,
+            Name = task.Name,
+            Description = task.Description,
+            Answer = task.Answer,
+            IsPublic = task.IsPublic,
+            IsExtendedTask = task.IsExtended,
+            CreationDateTime = task.CreationDateTime,
+            Deadline = task.Deadline
+        };
+        if (task.Subject != null)
+            responseModel.Subject = new SubjectApiModel() { Id = task.Subject.Id, Name = task.Subject.Name };
+        if (task.Difficulty != null)
+            responseModel.Difficulty = new Difficulty() { Id = task.Difficulty.Id, Name = task.Difficulty.Name };
+        if (task.Teacher != null)
+        {
+            responseModel.Teacher = new TeacherApiModel() { Id = task.TeacherId};
+            if (task.Teacher.User != null)
+                responseModel.Teacher.Nickname = task.Teacher.User.Nickname;
+        }
+        if (task.Institution != null)
+            responseModel.Institution = new InstitutionApiModel() { Id = task.Institution.Id, Name = task.Institution.Name };
+        return responseModel;
+    }
 }

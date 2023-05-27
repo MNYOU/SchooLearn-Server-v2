@@ -100,11 +100,15 @@ public class StudentManager : IStudentManager
             .Select(s => _mapper.Map<StudentApiModel>(s));
     }
 
-    public IEnumerable<GroupApiModel> GetMyGroups(long studentId)
+    public IEnumerable<GroupApiModel> GetMyGroups(long studentId, long? subjectId)
     {
-        return _groupRepository.GroupStudents
+        var groups = _groupRepository.GroupStudents
             .Include(gs => gs.Group)
-            .Where(gs => gs.StudentId == studentId && gs.IsApproved)
+            .Where(gs => gs.StudentId == studentId && gs.IsApproved);
+        if (subjectId != null)
+            groups = groups
+                .Where(g => g.Group.SubjectId == subjectId);
+        return groups
             .Select(gs => _mapper.Map<GroupApiModel>(gs.Group));
     }
 
@@ -135,8 +139,8 @@ public class StudentManager : IStudentManager
         await _groupRepository.GroupStudents.AddAsync(groupStudent);
         await _groupRepository.SaveChangesAsync();
                 
-        // TODO заявки сразу утверждаются, то есть не требуют подтверждения
-        teacherManager.ConsiderApplication(group.TeacherId, group.Id, studentId, true);
+        // заготовка, чтобы: заявки сразу утверждаются, то есть не требуют подтверждения
+        // teacherManager.ConsiderApplication(group.TeacherId, group.Id, studentId, true);
         return true;
     }
 

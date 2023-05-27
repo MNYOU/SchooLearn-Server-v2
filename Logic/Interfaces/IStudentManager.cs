@@ -19,7 +19,7 @@ public interface IStudentManager
 
     IEnumerable<StudentApiModel>? GetAllByInstitution(long userId, long institutionId, IAccountManager accountManager);
 
-    IEnumerable<GroupApiModel> GetMyGroups(long studentId);
+    IEnumerable<GroupApiModel> GetMyGroups(long studentId, long? subjectId);
 
     string? GetTeacherName(long studentId, long groupId);
 

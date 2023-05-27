@@ -21,9 +21,9 @@ public class StudentController : ControllerBase
     }
 
     [HttpGet("groups")]
-    public IActionResult GetMyGroups()
+    public IActionResult GetMyGroups([FromQuery] long? subjectId)
     {
-        var groups = _manager.GetMyGroups(Id);
+        var groups = _manager.GetMyGroups(Id, subjectId);
         return Ok(groups);
     }
 

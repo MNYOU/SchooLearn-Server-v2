@@ -47,18 +47,23 @@ public class TaskManager : ITaskManager
 
     public TaskResponseModel? GetForResponse(long id)
     {
-        return _mapper.Map<TaskResponseModel>(Get(id));
+        return ConvertHelper.ConvertTaskToResponse(Get(id));
     }
 
     public TaskResponseModel? GetAny(long userId, long? subjectId, long? difficultyId, IAccountManager accountManager)
     {
         var user = accountManager.Get(userId);
         if (user is null) return null;
+        var solved = _repository.SolvedTasks
+            .Where(st => st.StudentId == user.Id)
+            .Include(st => st.Task)
+            .AsEnumerable();
         var tasks = _repository.Tasks
             .Include(t => t.Difficulty)
             .Include(t => t.Subject)
-            .AsEnumerable()
-            .Where(t => t.IsPublic && !t.IsExtended && t.InstitutionId == user.InstitutionId);
+            .ToList()
+            .Where(t => t is { IsPublic: true, IsExtended: false } && t.InstitutionId == user.InstitutionId)
+            .Where(t => solved.All(st => st.TaskId != t.Id));
         if (subjectId != null)
         {
             tasks = tasks
@@ -70,12 +75,8 @@ public class TaskManager : ITaskManager
             tasks = tasks
                 .Where(t => t.DifficultyId == difficultyId);
         }
-
-        return _mapper.Map<TaskResponseModel>(tasks
-            .OrderBy(t => _random.Next(int.MaxValue))
-            // .Include(t => t.Difficulty)
-            // .Include(t => t.Subject)
-            .FirstOrDefault());
+        var task = tasks.MinBy(t => _random.Next(int.MaxValue));
+        return ConvertHelper.ConvertTaskToResponse(task);
     }
 
     public TaskResponseModel? GetForStudent(long studentId, long taskId)
@@ -142,7 +143,7 @@ public class TaskManager : ITaskManager
             .Include(t => t.Difficulty)
             .Include(t => t.Difficulty)
             .OrderBy(t => t.CreationDateTime)
-            .Select(t => _mapper.Map<TaskResponseModel>(t));
+            .Select(t => ConvertHelper.ConvertTaskToResponse(t));
     }
 
     public async Task<IEnumerable<TaskPreviewApiModel>> GetAssignedTasksAsync(long teacherId, long? groupId,
@@ -177,7 +178,7 @@ public class TaskManager : ITaskManager
             .OrderBy(t => t.Deadline)
             .Include(t => t.Difficulty)
             .Include(t => t.Subject)
-            .Select(t => _mapper.Map<TaskResponseModel>(t));
+            .Select(t => ConvertHelper.ConvertTaskToResponse(t));
     }
 
     public IEnumerable<StudentApiModel> GetStudentsWhoCompletedTask(long teacherId, long taskId)

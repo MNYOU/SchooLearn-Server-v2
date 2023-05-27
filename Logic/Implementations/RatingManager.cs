@@ -65,16 +65,25 @@ public class RatingManager : IRatingManager
             institutionId = null;
 
         var solved = _taskRepository.SolvedTasks
-            .Where(st => st.Student.InstitutionId == institutionId);
+                .Include(st => st.Student)
+                .ThenInclude(s => s.User)
+                // .Include(st => st.)
+                .Include(st => st.Task)
+                .ThenInclude(t => t.Subject)
+                .Where(st => st.Student.InstitutionId == institutionId)
+            .AsEnumerable();
+            ;
         if (groupId != null)
         {
             var groupStudents = _groupRepository.GroupStudents
-                .Where(gs => gs.GroupId == groupId && gs.IsApproved);
+                .Where(gs => gs.GroupId == groupId && gs.IsApproved)
+                .ToList();
             var groupTasks = _taskRepository.Tasks
-                .Where(t => t.Groups.Any(g => g.Id == groupId));
+                .Where(t => t.Groups.Any(g => g.Id == groupId))
+                .ToList();
             solved = solved
-                .Where(st =>
-                    groupStudents.Any(g => st.StudentId == g.StudentId) && groupTasks.Any(g => st.TaskId == g.Id));
+                .Where(st => groupStudents.Any(g => st.StudentId == g.StudentId))
+                .Where(st => groupTasks.Any(t => st.TaskId == t.Id));
         }
         else if (subjectId != null)
         {
@@ -91,18 +100,19 @@ public class RatingManager : IRatingManager
             solved = solved.Where(st => st.SolveTime <= to);
         }
 
-        solved = solved
-            .Include(st => st.Student)
-            .ThenInclude(s => s.User);
+        // solved = solved
+            // .Include(st => st.Student)
+            // .ThenInclude(s => s.User);
 
-        var ratingModels = CalculateRating(solved);
+        var ratingModels = CalculateRating(solved.ToList());
         return ratingModels;
     }
 
     private IEnumerable<RatingApiModel> CalculateRating(IEnumerable<SolvedTask> filteredSolvedTasks)
     {
+        var solvedTasks = filteredSolvedTasks.ToList();
         var usersWithScores = new Dictionary<string, float>();
-        foreach (var solvedTask in filteredSolvedTasks)
+        foreach (var solvedTask in solvedTasks)
         {
             var nickname = solvedTask.Student.User.Nickname;
             usersWithScores.TryAdd(nickname, 0);

@@ -323,7 +323,7 @@ public class TaskManager : ITaskManager
         var solvedTask = new SolvedTask
         {
             Answer = model.Answer,
-            SolveTime = DateTime.Now,
+            SolveTime = DateTime.Now.ToUniversalTime(),
             StudentId = studentId,
             Task = task,
             Scores = task.Difficulty.Scores,

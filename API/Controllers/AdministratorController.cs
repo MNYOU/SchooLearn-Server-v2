@@ -24,7 +24,7 @@ public class AdministratorController : ControllerBase
     public IActionResult GetInvitationCode()
     {
         var code = _manager.GetInvitationCode(Id);
-        return code != null ? Ok(code) : StatusCode(500);
+        return code != null ? Ok(new { Code = code}) : StatusCode(500);
     }
 
 

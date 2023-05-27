@@ -86,6 +86,7 @@ public class TeacherManager : ITeacherManager
             .Include(t => t.Institution)
             // .Include(t => t.Subjects)
             .Include(t => t.Groups)
+            .ThenInclude(g => g.Tasks)
             .FirstOrDefaultAsync(t => t.UserId == id);
     }
 

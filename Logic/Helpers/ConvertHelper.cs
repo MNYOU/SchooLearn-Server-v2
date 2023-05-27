@@ -1,5 +1,8 @@
 ﻿using Dal.Entities;
 using Logic.ApiModels;
+using Task = Dal.Entities.Task;
+
+// using Task = System.Threading.Tasks.Task;
 
 namespace Logic.Helpers;
 
@@ -34,5 +37,24 @@ public static class ConvertHelper
             Scores = solvedTask.Scores,
         };
         return apiModel;
+    }
+
+    public static Task ConvertToTask(TaskApiModel model, Difficulty difficulty, Subject subject)
+    {
+        return new Task()
+        {
+            Id = model.Id ?? 0,
+            Name = model.Name,
+            Description = model.Description,
+            DifficultyId = difficulty.Id,
+            SubjectId = subject.Id,
+            Deadline = model.Deadline.ToUniversalTime(),
+            CreationDateTime = model.CreationDateTime?.ToUniversalTime() ?? DateTime.Now.ToUniversalTime(),
+            IsPublic = model.IsPublic,
+            IsExtended = model.IsExtended,
+            Answer = model.Answer,
+            Groups = new List<Group>(),
+            SolvedTasks = new List<SolvedTask>(),
+        };
     }
 }

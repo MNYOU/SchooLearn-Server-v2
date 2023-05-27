@@ -10,9 +10,44 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4f5f8bc2-d3ae-4e95-a34e-d3e2eef762b2" name="Changes" comment="Реализовал Рейтинг">
+    <list default="true" id="4f5f8bc2-d3ae-4e95-a34e-d3e2eef762b2" name="Changes" comment="connect to mysql">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.SchooLearn/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/API/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/API/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/bin/Debug/net7.0/System.Security.Permissions.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/bin/Debug/net7.0/System.Security.Permissions.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.FileListAbsolute.txt" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.csproj.FileListAbsolute.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/API/obj/Debug/net7.0/API.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/EFCore/DataContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/EFCore/DataContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Dal/obj/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/AutoMapper/AutoMapperProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/AutoMapper/AutoMapperProfile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Helpers/ConvertHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Helpers/ConvertHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/StudentManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TaskManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/Implementations/TeacherManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Dal.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.deps.json" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.deps.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/bin/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.AssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.AssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.CoreCompileInputs.cache" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.csproj.CoreCompileInputs.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/Logic.pdb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/ref/Logic.dll" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" beforeDir="false" afterPath="$PROJECT_DIR$/Logic/obj/Debug/net7.0/refint/Logic.dll" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,16 +76,20 @@
     </option>
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/06e6b5e410594922af54f5731fb38a29b1c8b0/ef/fa6ce775/AppContext.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/1e8feaadf5c3fa14d36ea2a638c432a2e1a47b7837d8b83d88303c5d9c15cf/AsyncValueTaskMethodBuilderT.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/485da50d43321b81edc28153271bdedb84943a243743e2deaa67a981587968/IConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/6441be2d897c4b23f370c135bc5cbd07eceb3cdd1f83fa5e3ebb7f4536f9/QueryableMethodTranslatingExpressionVisitor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/72f3b2328cb58fc95d3e64e0c4d29183542330a9f614c3f5f02efafd87f4619/SymmetricSecurityKey.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/794bcfedceb3c6d957fbddf0e1c9a04afca77f9b5470c6859466cfba35e1ddb1/Task.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/7b3b6985aad11c5d633d75b545f5f5f4fc7e50918ad1cb9f6b615682f5bfb76d/SingleQueryingEnumerable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/81a3bcf4bb6aa5e62a9839f9cfeeba6126496f4fa07d1e57b27a5176e42525/ControllerBase.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/85448f861b1cb95910693f28a5ce3363967c79953b460b176d97298ae5ed0/Nullable.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d66bc83531db1f9ba43f3f845b495b168c9676585238eb5696a8d68c45a231/SymmetricSignatureProvider.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/d856066ffe4c59543feec5c19d3d3c8934b5eec93f8cf1358aedcb555825/Boolean.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/SourcesCache/e74356f198b598e97eaeea83e8b7b1f2bfe27c0a39fedf86bb7dc44827fbda/ActionMethodExecutor.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Dal/EFCore/Configurations/FootballerConfiguration.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/../Catalog of Footballers/Logic/AutoMapper/AutoMappingProfile.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="mock://C:/Users/Арман/Documents/Programs/C#/SchooLearn/API/Controllers/AccountController.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/Controllers/TaskController.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/bin/Debug/net7.0/publish/API.deps.json" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/API/obj/Debug/net7.0/.NETCoreApp,Version=v7.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
@@ -253,7 +292,14 @@
       <workItem from="1684678690002" duration="6076000" />
       <workItem from="1684799142970" duration="894000" />
       <workItem from="1684810049464" duration="308000" />
-      <workItem from="1684827842697" duration="3306000" />
+      <workItem from="1684827842697" duration="5887000" />
+      <workItem from="1684952413254" duration="1223000" />
+      <workItem from="1684992735592" duration="1467000" />
+      <workItem from="1684994557300" duration="594000" />
+      <workItem from="1685005327376" duration="105000" />
+      <workItem from="1685005521432" duration="548000" />
+      <workItem from="1685125131788" duration="200000" />
+      <workItem from="1685130247401" duration="4307000" />
     </task>
     <task id="LOCAL-00001" summary="start commit">
       <created>1679302567998</created>
@@ -339,7 +385,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684801552673</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="connect to mysql">
+      <created>1684835714996</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1684835714996</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -411,9 +464,27 @@
     <MESSAGE value="Правки" />
     <MESSAGE value="Миграции" />
     <MESSAGE value="Реализовал Рейтинг" />
-    <option name="LAST_COMMIT_MESSAGE" value="Реализовал Рейтинг" />
+    <MESSAGE value="connect to mysql" />
+    <option name="LAST_COMMIT_MESSAGE" value="connect to mysql" />
   </component>
   <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/Logic/Implementations/TaskManager.cs</url>
+          <line>71</line>
+          <properties documentPath="C:\Users\Арман\Documents\Programs\C#\SchooLearn\Logic\Implementations\TaskManager.cs" initialLine="68" containingFunctionPresentation="Method 'GetAny'">
+            <startOffsets>
+              <option value="2342" />
+            </startOffsets>
+            <endOffsets>
+              <option value="2343" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
     <pin-to-top-manager>
       <pinned-members>
         <PinnedItemInfo parentTag="Type#Dal.Entities.Institution" memberName="Id" />

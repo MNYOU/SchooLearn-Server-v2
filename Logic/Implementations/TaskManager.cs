@@ -37,6 +37,7 @@ public class TaskManager : ITaskManager
     public Task? Get(long id)
     {
         return _repository.Tasks
+            .Include(t => t.Teacher)
             .Include(t => t.Subject)
             .Include(t => t.Difficulty)
             .Include(t => t.Institution)
@@ -54,6 +55,9 @@ public class TaskManager : ITaskManager
         var user = accountManager.Get(userId);
         if (user is null) return null;
         var tasks = _repository.Tasks
+            .Include(t => t.Difficulty)
+            .Include(t => t.Subject)
+            .AsEnumerable()
             .Where(t => t.IsPublic && !t.IsExtended && t.InstitutionId == user.InstitutionId);
         if (subjectId != null)
         {
@@ -69,8 +73,8 @@ public class TaskManager : ITaskManager
 
         return _mapper.Map<TaskResponseModel>(tasks
             .OrderBy(t => _random.Next(int.MaxValue))
-            .Include(t => t.Difficulty)
-            .Include(t => t.Subject)
+            // .Include(t => t.Difficulty)
+            // .Include(t => t.Subject)
             .FirstOrDefault());
     }
 
@@ -79,6 +83,7 @@ public class TaskManager : ITaskManager
         var student = _studentManager.Get(studentId);
         var task = GetForResponse(taskId);
         if (student is null || task is null) return null;
+        task.Difficulty.Tasks = new List<Task>();
         if (student.InstitutionId == task.Institution.Id)
             return task;
         return null;
@@ -89,6 +94,7 @@ public class TaskManager : ITaskManager
         var teacher = _teacherManager.Get(teacherId);
         var task = GetForResponse(taskId);
         if (teacher is null || task is null) return null;
+        task.Difficulty.Tasks = new List<Task>();
         if (teacher.InstitutionId == task.Institution.Id)
             return task;
         return null;
@@ -221,7 +227,7 @@ public class TaskManager : ITaskManager
         var difficulty = await _repository.Difficulties.FirstOrDefaultAsync(d => d.Name == model.Difficulty);
         var subject = await _subjectRepository.Subjects.FirstOrDefaultAsync(d => d.Name == model.Subject);
         if (difficulty == null || subject == null) return null;
-        var task = _mapper.Map<Task>(model);
+        var task = ConvertHelper.ConvertToTask(model, difficulty, subject);
         task.InstitutionId = institutionId;
         task.TeacherId = teacherId;
         return CheckTaskForCorrectness(task) ? task : null;
@@ -242,12 +248,16 @@ public class TaskManager : ITaskManager
     public async Task<bool> TryAddTaskForGroupAsync(long teacherId, long groupId, TaskApiModel model)
     {
         var teacher = await _teacherManager.GetWithDetailsAsync(teacherId);
-        var group = teacher?.Groups.FirstOrDefault(g => g.Id == groupId);
+        var group = teacher?.Groups
+            .FirstOrDefault(g => g.Id == groupId);
         if (teacher is null || group is null) return false;
         var task = await MapTaskAsync(model, teacher.InstitutionId, teacherId);
         if (task is null) return false;
-        group.Tasks.Add(task);
-        await _groupRepository.SaveChangesAsync();
+        // task.Groups.Add(group);
+        // group.Tasks.Add(task);
+        await _repository.Tasks.AddAsync(task);
+        await _repository.SaveChangesAsync();
+        return await TryAddTaskForGroupsAsync(teacherId, task.Id, new[] { _mapper.Map<GroupApiModel>(group) });
         return true;
     }
 
@@ -287,6 +297,7 @@ public class TaskManager : ITaskManager
         if (task != null)
         {
             var groups = _groupRepository.Groups
+                .AsEnumerable()
                 .Where(g => g.TeacherId == teacherId && groupApiModels.Any(gap => gap.Name == g.Name));
             foreach (var group in groups)
             {

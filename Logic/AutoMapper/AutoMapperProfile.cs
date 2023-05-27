@@ -2,7 +2,7 @@
 using Dal.Entities;
 using Logic.ApiModels;
 using Logic.Models;
-using Task = System.Threading.Tasks.Task;
+using Task = Dal.Entities.Task;
 
 namespace Logic.AutoMapper;
 
@@ -11,21 +11,24 @@ public class AutoMapperProfile: Profile
     public AutoMapperProfile()
     {
         CreateMap<InstitutionApiRequest, Institution>().ReverseMap();
-        CreateMap<TaskApiModel, Task>();
+        // CreateMap<TaskApiModel, Task>();
         CreateMap<GroupApiModel, Group>().ReverseMap();
         CreateMap<User, AuthorizedApiModel>();
         // CreateMap<RegistrationApiModel, RegistrationModel>();
         CreateMap<RegistrationApiModel, User>();
+        CreateMap<Task, TaskPreviewApiModel>();
+        CreateMap<Task, TaskResponseModel>().ForPath(t => t.Difficulty.Tasks, d => d.Ignore());
             
         CreateMap<LoginApiModel, LoginModel>();
-        CreateMap<TaskApiModel, Task>();
+        // CreateMap<TaskApiModel, Task>();
         // наверное нужно разделить task модели на респонсе и реквест
         // CreateMap<TaskCustomApiModel, TaskWithDetailedAnswer>();
-        CreateMap<TaskApiModel, Task>();
+        // CreateMap<TaskApiModel, Task>();
         
         CreateMap<InstitutionApiRequest, Institution>();
         CreateMap<Institution, InstitutionApiModel>();
 
-        CreateMap<Subject, SubjectApiModel>();
+        CreateMap<Subject, SubjectApiModel>().ReverseMap();
+        CreateMap<Teacher, TeacherApiModel>();
     }
 }

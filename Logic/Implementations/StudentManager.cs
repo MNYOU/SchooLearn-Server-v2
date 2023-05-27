@@ -129,7 +129,7 @@ public class StudentManager : IStudentManager
         if (student is null || group is null)
             return false;
         if (student.InstitutionId != null && student.InstitutionId != group.Teacher.InstitutionId ||
-            _groupRepository.GroupStudents.Any(gs => gs.StudentId == studentId || gs.GroupId == group.Id))
+            _groupRepository.GroupStudents.Any(gs => gs.StudentId == studentId && gs.GroupId == group.Id))
             return false;
         var groupStudent = new GroupStudent { StudentId = studentId, GroupId = group.Id, IsApproved = false };
         await _groupRepository.GroupStudents.AddAsync(groupStudent);

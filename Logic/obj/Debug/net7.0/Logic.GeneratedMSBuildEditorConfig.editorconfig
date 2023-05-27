@@ -8,4 +8,4 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Logic
-build_property.ProjectDir = C:\Users\Арман\Documents\Programs\C#\SchooLearn\Logic\
+build_property.ProjectDir = /root/www/SchooLearn-Server-v2/Logic/

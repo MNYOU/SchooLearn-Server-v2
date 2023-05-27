@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
+using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
@@ -12,63 +12,83 @@ namespace Dal.EFCore.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AlterDatabase()
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.CreateTable(
                 name: "difficulties",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    scores = table.Column<byte>(type: "smallint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "longtext", nullable: false),
+                    scores = table.Column<byte>(type: "tinyint unsigned", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_difficulties", x => x.id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "file_data",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    file_name = table.Column<string>(type: "text", nullable: false),
-                    content = table.Column<byte[]>(type: "bytea", nullable: false),
-                    content_type = table.Column<string>(type: "text", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    file_name = table.Column<string>(type: "longtext", nullable: false),
+                    content = table.Column<byte[]>(type: "longblob", nullable: false),
+                    content_type = table.Column<string>(type: "longtext", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_file_data", x => x.id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "institutions",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "longtext", nullable: false),
                     tin = table.Column<long>(type: "bigint", fixedLength: true, maxLength: 12, nullable: false),
-                    WebAddress = table.Column<string>(type: "text", nullable: false),
-                    is_confirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    primary_invitation_code = table.Column<string>(type: "text", nullable: true),
-                    invitation_code_for_teachers = table.Column<string>(type: "text", nullable: true),
-                    AdminId = table.Column<long>(type: "bigint", nullable: true)
+                    WebAddress = table.Column<string>(type: "longtext", nullable: false),
+                    is_confirmed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    primary_invitation_code = table.Column<string>(type: "longtext", nullable: true),
+                    invitation_code_for_teachers = table.Column<string>(type: "longtext", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_institutions", x => x.id);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "subjects",
+                columns: table => new
+                {
+                    id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "longtext", nullable: false),
+                    description = table.Column<string>(type: "longtext", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_subjects", x => x.id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "applications",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    is_reviewed = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    is_reviewed = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false),
                     InstitutionId = table.Column<long>(type: "bigint", nullable: false),
-                    result = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    result = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -79,18 +99,19 @@ namespace Dal.EFCore.Migrations
                         principalTable: "institutions",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "users",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    nickname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    login = table.Column<string>(type: "text", nullable: false),
-                    email = table.Column<string>(type: "text", nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    nickname = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false),
+                    login = table.Column<string>(type: "longtext", nullable: false),
+                    email = table.Column<string>(type: "longtext", nullable: false),
+                    password = table.Column<string>(type: "longtext", nullable: false),
                     role = table.Column<short>(type: "smallint", nullable: false),
                     InstitutionId = table.Column<long>(type: "bigint", nullable: true)
                 },
@@ -102,7 +123,8 @@ namespace Dal.EFCore.Migrations
                         column: x => x.InstitutionId,
                         principalTable: "institutions",
                         principalColumn: "id");
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "admins",
@@ -126,7 +148,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "students",
@@ -134,7 +157,7 @@ namespace Dal.EFCore.Migrations
                 {
                     UserId = table.Column<long>(type: "bigint", nullable: false),
                     InstitutionId = table.Column<long>(type: "bigint", nullable: true),
-                    is_confirmed = table.Column<bool>(type: "boolean", nullable: false)
+                    is_confirmed = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -150,7 +173,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "teachers",
@@ -174,38 +198,18 @@ namespace Dal.EFCore.Migrations
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "subjects",
-                columns: table => new
-                {
-                    id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    TeacherId = table.Column<long>(type: "bigint", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_subjects", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_subjects_teachers_TeacherId",
-                        column: x => x.TeacherId,
-                        principalTable: "teachers",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "group",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: true),
-                    invitation_code = table.Column<string>(type: "text", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "longtext", nullable: false),
+                    description = table.Column<string>(type: "longtext", nullable: true),
+                    invitation_code = table.Column<string>(type: "varchar(255)", nullable: false),
                     TeacherId = table.Column<long>(type: "bigint", nullable: false),
                     SubjectId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -224,23 +228,24 @@ namespace Dal.EFCore.Migrations
                         principalTable: "teachers",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "tasks",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    description = table.Column<string>(type: "text", nullable: false),
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    name = table.Column<string>(type: "longtext", nullable: false),
+                    description = table.Column<string>(type: "longtext", nullable: false),
                     SubjectId = table.Column<long>(type: "bigint", nullable: false),
                     DifficultyId = table.Column<long>(type: "bigint", nullable: false),
-                    answer = table.Column<string>(type: "text", nullable: true),
-                    IsPublic = table.Column<bool>(type: "boolean", nullable: false),
-                    IsExtended = table.Column<bool>(type: "boolean", nullable: false),
-                    creation_datetime = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    execution_period = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    answer = table.Column<string>(type: "longtext", nullable: true),
+                    IsPublic = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    IsExtended = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    creation_datetime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    execution_period = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     InstitutionId = table.Column<long>(type: "bigint", nullable: false),
                     TeacherId = table.Column<long>(type: "bigint", nullable: false)
                 },
@@ -271,7 +276,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "teachers",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "GroupStudents",
@@ -279,7 +285,7 @@ namespace Dal.EFCore.Migrations
                 {
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
                     GroupId = table.Column<long>(type: "bigint", nullable: false),
-                    is_approved = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
+                    is_approved = table.Column<bool>(type: "tinyint(1)", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -296,7 +302,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "students",
                         principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "GroupTask",
@@ -320,7 +327,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "tasks",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
                 name: "solved_tasks",
@@ -328,11 +336,11 @@ namespace Dal.EFCore.Migrations
                 {
                     StudentId = table.Column<long>(type: "bigint", nullable: false),
                     TaskId = table.Column<long>(type: "bigint", nullable: false),
-                    answer = table.Column<string>(type: "text", nullable: true),
+                    answer = table.Column<string>(type: "longtext", nullable: true),
                     FileAnswerId = table.Column<long>(type: "bigint", nullable: true),
-                    IsChecked = table.Column<bool>(type: "boolean", nullable: false),
-                    Scores = table.Column<float>(type: "real", nullable: false),
-                    solve_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    IsChecked = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Scores = table.Column<float>(type: "float", nullable: false),
+                    solve_time = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -354,7 +362,8 @@ namespace Dal.EFCore.Migrations
                         principalTable: "tasks",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                });
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateIndex(
                 name: "IX_admins_InstitutionId",
@@ -408,11 +417,6 @@ namespace Dal.EFCore.Migrations
                 name: "IX_students_InstitutionId",
                 table: "students",
                 column: "InstitutionId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_subjects_TeacherId",
-                table: "subjects",
-                column: "TeacherId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_tasks_DifficultyId",

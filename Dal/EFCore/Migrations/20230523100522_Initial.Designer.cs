@@ -5,15 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace Dal.EFCore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20230520083250_SubjectConf")]
-    partial class SubjectConf
+    [Migration("20230523100522_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,9 +20,7 @@ namespace Dal.EFCore.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.0-preview.2.23128.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("Dal.Entities.Admin", b =>
                 {
@@ -48,11 +45,9 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<bool>("ApplicationResult")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("result");
 
@@ -61,7 +56,7 @@ namespace Dal.EFCore.Migrations
 
                     b.Property<bool>("IsReviewed")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_reviewed");
 
@@ -79,15 +74,13 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("name");
 
                     b.Property<byte>("Scores")
-                        .HasColumnType("smallint")
+                        .HasColumnType("tinyint unsigned")
                         .HasColumnName("scores");
 
                     b.HasKey("Id");
@@ -102,21 +95,19 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<byte[]>("Content")
                         .IsRequired()
-                        .HasColumnType("bytea")
+                        .HasColumnType("longblob")
                         .HasColumnName("content");
 
                     b.Property<string>("ContentType")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("content_type");
 
                     b.Property<string>("FileName")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("file_name");
 
                     b.HasKey("Id");
@@ -131,20 +122,18 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Description")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("description");
 
                     b.Property<string>("InvitationCode")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(255)")
                         .HasColumnName("invitation_code");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("name");
 
                     b.Property<long>("SubjectId")
@@ -175,7 +164,7 @@ namespace Dal.EFCore.Migrations
 
                     b.Property<bool>("IsApproved")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
+                        .HasColumnType("tinyint(1)")
                         .HasDefaultValue(false)
                         .HasColumnName("is_approved");
 
@@ -193,23 +182,21 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("InvitationCodeForTeachers")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("invitation_code_for_teachers");
 
                     b.Property<bool>("IsConfirmed")
-                        .HasColumnType("boolean")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("is_confirmed");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("name");
 
                     b.Property<string>("PrimaryInvitationCode")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("primary_invitation_code");
 
                     b.Property<long>("TIN")
@@ -220,7 +207,7 @@ namespace Dal.EFCore.Migrations
 
                     b.Property<string>("WebAddress")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -236,20 +223,20 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Answer")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("answer");
 
                     b.Property<long?>("FileAnswerId")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsChecked")
-                        .HasColumnType("boolean");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<float>("Scores")
-                        .HasColumnType("real");
+                        .HasColumnType("float");
 
                     b.Property<DateTime>("SolveTime")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("solve_time");
 
                     b.HasKey("StudentId", "TaskId");
@@ -271,7 +258,7 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsConfirmed")
-                        .HasColumnType("boolean")
+                        .HasColumnType("tinyint(1)")
                         .HasColumnName("is_confirmed");
 
                     b.HasKey("UserId");
@@ -288,15 +275,13 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Description")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
@@ -311,23 +296,21 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Answer")
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("answer");
 
                     b.Property<DateTime>("CreationDateTime")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("creation_datetime");
 
                     b.Property<DateTime>("Deadline")
-                        .HasColumnType("timestamp with time zone")
+                        .HasColumnType("datetime(6)")
                         .HasColumnName("execution_period");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("description");
 
                     b.Property<long>("DifficultyId")
@@ -337,14 +320,14 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsExtended")
-                        .HasColumnType("boolean");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<bool>("IsPublic")
-                        .HasColumnType("boolean");
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("name");
 
                     b.Property<long>("SubjectId")
@@ -388,11 +371,9 @@ namespace Dal.EFCore.Migrations
                         .HasColumnType("bigint")
                         .HasColumnName("id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
-
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("email");
 
                     b.Property<long?>("InstitutionId")
@@ -400,18 +381,18 @@ namespace Dal.EFCore.Migrations
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("login");
 
                     b.Property<string>("Nickname")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
+                        .HasColumnType("varchar(100)")
                         .HasColumnName("nickname");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("longtext")
                         .HasColumnName("password");
 
                     b.Property<short>("Role")

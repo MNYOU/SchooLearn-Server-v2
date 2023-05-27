@@ -3595,19 +3595,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Арман\\.nuget\\packages\\": {}
+    "/root/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj",
+      "projectUniqueName": "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj",
       "projectName": "Dal",
-      "projectPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\Dal.csproj",
-      "packagesPath": "C:\\Users\\Арман\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Арман\\Documents\\Programs\\C#\\SchooLearn\\Dal\\obj\\",
+      "projectPath": "/root/www/SchooLearn-Server-v2/Dal/Dal.csproj",
+      "packagesPath": "/root/.nuget/packages/",
+      "outputPath": "/root/www/SchooLearn-Server-v2/Dal/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Арман\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "/root/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -3674,7 +3674,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/7.0.302/RuntimeIdentifierGraph.json"
       }
     }
   }

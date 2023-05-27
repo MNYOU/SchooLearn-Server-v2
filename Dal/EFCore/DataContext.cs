@@ -31,8 +31,8 @@ public class DataContext : DbContext, IInstitutionRepository, IUserRepository, I
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        // optionsBuilder.UseMySQL("server=localhost;database=database;user=superarman14;password=password");
-        optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=jhtnmb32;");
+        optionsBuilder.UseMySQL("server=localhost;database=database;user=superarman14;password=kbnjlh*&4ngjH");
+        // optionsBuilder.UseNpgsql("Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=kbnjlh*&4ngjH;");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -152,12 +152,17 @@ public class TaskManager : ITaskManager
         var teacher = await _teacherManager.GetWithDetailsAsync(teacherId);
         if (teacher is null)
             return Array.Empty<TaskPreviewApiModel>();
-        return _repository.Tasks
+        var tasks = _repository.Tasks
+            .Include(t => t.Difficulty)
+            .Include(t => t.Subject)
+            .Include(t => t.Groups)
+            .AsEnumerable();
+        return tasks
             .Where(t => t.TeacherId == teacherId && (groupId == null || t.Groups.Any(g => g.Id == groupId)) &&
                         !IsExpired(t) && t.Deadline >= period.Value)
             .OrderBy(t => t.CreationDateTime)
-            .Include(t => t.Difficulty)
-            .Include(t => t.Subject)
+            // .Include(t => t.Difficulty)
+            // .Include(t => t.Subject)
             .Select(t => _mapper.Map<TaskPreviewApiModel>(t));
     }
 

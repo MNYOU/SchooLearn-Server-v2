@@ -2,6 +2,7 @@
 using Dal.Entities;
 using Logic.ApiModels;
 using Logic.Models;
+using Org.BouncyCastle.Crypto.Modes;
 using Task = Dal.Entities.Task;
 
 namespace Logic.AutoMapper;
@@ -17,7 +18,9 @@ public class AutoMapperProfile: Profile
         // CreateMap<RegistrationApiModel, RegistrationModel>();
         CreateMap<RegistrationApiModel, User>();
         CreateMap<Task, TaskPreviewApiModel>();
-        CreateMap<Task, TaskResponseModel>().ForPath(t => t.Difficulty.Tasks, d => d.Ignore());
+        CreateMap<Task, TaskResponseModel>()
+            .ForMember(t => t.Difficulty, opt => opt.MapFrom(d => d.Difficulty))
+            .ForPath(t => t.Difficulty.Tasks, d => d.Ignore());
             
         CreateMap<LoginApiModel, LoginModel>();
         // CreateMap<TaskApiModel, Task>();

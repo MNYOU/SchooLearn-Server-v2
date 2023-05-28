@@ -189,9 +189,12 @@ public class TaskManager : ITaskManager
             .SelectMany(g => g.GroupsStudent.Select(gs => gs.Student))
             .Distinct();
         return _repository.SolvedTasks
+            .Include(st => st.Student)
+            .ThenInclude(s => s.User)
+            .AsEnumerable()
             .Where(t => t.TaskId == taskId && students.Any(s => t.StudentId == s.UserId))
             .OrderBy(t => t.SolveTime)
-            .Select(t => new StudentApiModel());
+            .Select(t => _mapper.Map<StudentApiModel>(t.Student));
     }
 
     public int GetCountOfSolved(long studentId, long groupId)
@@ -273,9 +276,9 @@ public class TaskManager : ITaskManager
         var task = await _repository.Tasks.FirstOrDefaultAsync(t => t.Id == model.Id && t.TeacherId == teacherId);
         if (teacher != null && task != null)
         {
-            var newTask = await MapTaskAsync(model, teacher.InstitutionId, teacherId);
-            if (newTask == null) return false;
-            _repository.Tasks.Update(newTask);
+            task = await MapTaskAsync(model, teacher.InstitutionId, teacherId);
+            if (task == null) return false;
+            _repository.Tasks.Update(task);
             await _repository.SaveChangesAsync();
             return true;
         }
@@ -289,6 +292,7 @@ public class TaskManager : ITaskManager
         if (task != null)
         {
             _repository.Tasks.Remove(task);
+            _repository.SaveChanges();
             return true;
         }
 

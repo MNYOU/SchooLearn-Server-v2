@@ -93,7 +93,10 @@ public class TeacherManager : ITeacherManager
     public IEnumerable<Group> GetMyGroups(long teacherId)
     {
         return _groupRepository.Groups
-            .Where(g => g.TeacherId == teacherId);
+            .Where(g => g.TeacherId == teacherId)
+            .Include(g => g.GroupsStudent)
+            .ThenInclude(g => g.Student)
+            .ThenInclude(s => s.User);
     }
 
     public IEnumerable<GroupApiModel> GetMyGroupsApiModels(long teacherId, long? subjectId)

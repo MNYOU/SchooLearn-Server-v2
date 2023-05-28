@@ -173,7 +173,7 @@ public class TeacherManager : ITeacherManager
         if (group is null) return Array.Empty<StudentApiModel>();
         return group
             .GroupsStudent
-            .Where(gs => gs.IsApproved)
+            .Where(gs => !gs.IsApproved)
             .Select(gs => _mapper.Map<StudentApiModel>(gs.Student));
     }
 

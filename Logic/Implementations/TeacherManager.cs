@@ -153,6 +153,7 @@ public class TeacherManager : ITeacherManager
         return _groupRepository.Groups
             .Include(g => g.GroupsStudent)
             .ThenInclude(gs => gs.Student)
+            .ThenInclude(s => s.User)
             .FirstOrDefault(g => g.Id == groupId && g.TeacherId == teacherId);
     }
 

@@ -14,6 +14,9 @@ public class AutoMapperProfile: Profile
         CreateMap<InstitutionApiRequest, Institution>().ReverseMap();
         // CreateMap<TaskApiModel, Task>();
         CreateMap<GroupApiModel, Group>().ReverseMap();
+        CreateMap<Student, StudentApiModel>()
+            .ForMember(d => d.Id, opt => opt.MapFrom(s => s.UserId))
+            .ForMember(d => d.Nickname, opt => opt.MapFrom(s => s.User.Nickname));
         CreateMap<User, AuthorizedApiModel>();
         // CreateMap<RegistrationApiModel, RegistrationModel>();
         CreateMap<RegistrationApiModel, User>();

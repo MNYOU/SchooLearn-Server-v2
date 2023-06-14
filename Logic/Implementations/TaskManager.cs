@@ -276,8 +276,19 @@ public class TaskManager : ITaskManager
         var task = await _repository.Tasks.FirstOrDefaultAsync(t => t.Id == model.Id && t.TeacherId == teacherId);
         if (teacher != null && task != null)
         {
-            task = await MapTaskAsync(model, teacher.InstitutionId, teacherId);
-            if (task == null) return false;
+            var newTask = await MapTaskAsync(model, teacher.InstitutionId, teacherId);
+            if (newTask is null) return false;
+            task.Name = newTask.Name;
+            task.Description = newTask.Description;
+            task.SubjectId = newTask.SubjectId;
+            task.DifficultyId = newTask.DifficultyId;
+            task.Answer = newTask.Answer;
+            task.IsPublic = newTask.IsPublic;
+            task.IsExtended = newTask.IsExtended;
+            task.CreationDateTime = DateTime.Now.ToUniversalTime();
+            task.Deadline = newTask.Deadline.ToUniversalTime();
+            task.TeacherId = newTask.TeacherId;
+            task.InstitutionId = teacher.InstitutionId;
             _repository.Tasks.Update(task);
             await _repository.SaveChangesAsync();
             return true;

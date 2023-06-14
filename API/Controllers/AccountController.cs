@@ -1,4 +1,5 @@
 ﻿using Logic.ApiModels;
+using Logic.Implementations;
 using Logic.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,5 +42,14 @@ public class AccountController : ControllerBase
     {
         var result = _manager.Rename(Id, name);
         return result ? Ok() : StatusCode(500);
+    }
+
+    [HttpPost("send-message")]
+    public async Task<IActionResult> SendMessage()
+    {
+        // не реализованно
+        var emailManager = new EmailManager();
+        emailManager.SendMessageAsync("","", "");
+        return Ok();
     }
 }
